@@ -1,0 +1,45 @@
+.cards_wrapper{
+    display: block;
+}
+
+.cards_inner_wrapper{
+    height: calc(100vh - 305px);
+    overflow: hidden;
+}
+
+.cards_wrapper{
+    height: 100%;
+    overflow-y: auto;
+}
+
+.cards_list{
+    width: 100%;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-column-gap: 24px;
+    grid-row-gap: 32px;
+    grid-template-columns: 1fr 1fr;
+}
+
+.card{
+    position: relative;
+    width: 272px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background: none;
+    outline: none;
+    color: inherit;
+}
+
+.price{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}

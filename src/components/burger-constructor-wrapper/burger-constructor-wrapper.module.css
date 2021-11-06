@@ -1,0 +1,5 @@
+.burger_content_wrapper{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-column-gap: 40px;
+}
