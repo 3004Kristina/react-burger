@@ -2,11 +2,13 @@ import React from 'react';
 import BurgerIngredients from '../burger-ingredients/burger-ingredients';
 import BurgerConstructor from '../burger-constructor/burger-constructor';
 import wrapperStyles from './burger-constructor-wrapper.module.css';
-import data from '../utils/data';
+import PropTypes from 'prop-types';
 
+BurgerConstructorWrapper.propTypes = {
+    data: PropTypes.array
+};
 
-
-function BurgerConstructorWrapper() {
+function BurgerConstructorWrapper({data}) {
     let groupedData = [
         {
             type: 'bun',

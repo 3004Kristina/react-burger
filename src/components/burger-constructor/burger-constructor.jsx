@@ -3,12 +3,20 @@ import burgerConstructorStyles from './burger-constructor.module.css';
 import {Button, ConstructorElement, CurrencyIcon, DragIcon} from '@ya.praktikum/react-developer-burger-ui-components';
 import bun2 from '../../images/bun-02.png';
 import PropTypes from 'prop-types';
+import OrderDetails from '../order-details/order-details';
+import Modal from '../modal/modal';
 
 BurgerConstructor.propTypes = {
     groupedData: PropTypes.array
 };
 
 function BurgerConstructor({groupedData}) {
+    const orderDetailsModal = React.useRef(null);
+
+    function openOrderDetailsModal () {
+        orderDetailsModal.current.open();
+    }
+
     return (
         <div className={`${burgerConstructorStyles.constructor_wrapper} pl-4`}>
             <div className="pl-8 pr-4">
@@ -57,10 +65,13 @@ function BurgerConstructor({groupedData}) {
                     </span>
 
                 </span>
-                <Button type="primary" size="large">
+                <Button type="primary" size="large" onClick={openOrderDetailsModal}>
                     Оформить заказ
                 </Button>
             </div>
+            <Modal ref={orderDetailsModal}>
+                <OrderDetails/>
+            </Modal>
         </div>
     );
 }
