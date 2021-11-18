@@ -1,0 +1,54 @@
+.constructor_wrapper{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.cards_inner_wrapper{
+    max-height: 440px;
+    height: auto;
+    overflow: hidden;
+}
+
+.cards_wrapper{
+    height: 100%;
+    overflow-y: auto;
+}
+
+.cards_list{
+    composes: constructor_wrapper;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.cards_list + .cards_list{
+    margin-top: 10px;
+}
+
+.cards_list li{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 4px;
+}
+
+.btn_wrapper{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.price_wrapper{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.icon svg{
+    width: 33px;
+    height: 33px;
+}
