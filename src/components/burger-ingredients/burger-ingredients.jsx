@@ -6,47 +6,62 @@ import {CurrencyIcon} from '@ya.praktikum/react-developer-burger-ui-components';
 import PropTypes from 'prop-types';
 import Modal from '../modal/modal';
 import IngredientDetails from '../ingredient-details/ingredient-details';
-
-const TYPE_LABELS = {
-    'bun': 'Булки',
-    'sauce': 'Соусы',
-    'main': 'Начинки'
-};
+import {TYPE_LABELS} from '../../utils/consts'
 
 BurgerIngredients.propTypes = {
-    groupedData: PropTypes.array
+    ingredientsCategories: PropTypes.arrayOf(PropTypes.shape({
+        type: PropTypes.string,
+        label: PropTypes.string,
+        items: PropTypes.arrayOf(PropTypes.shape({
+            calories: PropTypes.number,
+            carbohydrates: PropTypes.number,
+            fat: PropTypes.number,
+            price: PropTypes.number,
+            proteins: PropTypes.number,
+            type: PropTypes.string,
+            image: PropTypes.string,
+            image_large: PropTypes.string,
+            image_mobile: PropTypes.string,
+            _id: PropTypes.string
+        }))
+    }))
 };
 
-function BurgerIngredients({groupedData}) {
-    const [current, setCurrent] = React.useState(groupedData.find(group => group.items.length > 0)?.type),
-        [activeItem, setActiveItem] = React.useState({}),
-        titleToScrollRef = React.useRef({}),
-        orderDetailsModal = React.useRef(null);
+function BurgerIngredients({ingredientsCategories}) {
+    const [current, setCurrent] = React.useState('');
+    const [activeItem, setActiveItem] = React.useState({});
+    const [modalOpened, setModalOpened] = React.useState(false);
+    const titleToScrollRef = React.useRef({});
+
 
     React.useEffect(() => {
-        setCurrent(groupedData.find(group => group.items.length > 0)?.type);
-    },[groupedData])
+        setCurrent(ingredientsCategories[0].type);
+    }, [ingredientsCategories]);
 
     React.useEffect(() => {
         titleToScrollRef.current[current]?.scrollIntoView({behavior: 'smooth'});
     }, [current]);
 
-    function openIngredientDetailsModal(item) {
+    function handleOpenIngredientDetailsModal(item) {
         setActiveItem(item);
-        orderDetailsModal.current.open();
+        setModalOpened(true);
+    }
+
+    function handleCloseIngredientDetailsModal () {
+        setModalOpened(false);
     }
 
     return (
         <div>
             <div style={{display: 'flex'}} className="mb-10 mr-15">
-                {groupedData.map((group) => group.items.length > 0 && (
+                {ingredientsCategories.map((group) => group.items.length > 0 && (
                     <Tab key={group.type} value={group.type} active={current === group.type} onClick={setCurrent}>{group.label}</Tab>
                 ))}
             </div>
 
             <div className={burgerIngredientsStyles.cards_inner_wrapper}>
                 <div className={`${burgerIngredientsStyles.cards_wrapper} custom-scroll`}>
-                    {groupedData.map(group => group.items.length > 0 && (
+                    {ingredientsCategories.map(group => group.items.length > 0 && (
                         <div key={group.type} className="mb-10">
                             <h2 className="text text_type_main-medium mb-6"
                                 ref={(el) => titleToScrollRef.current[group.type] = el}>
@@ -55,7 +70,7 @@ function BurgerIngredients({groupedData}) {
                             <ul className={burgerIngredientsStyles.cards_list}>
                                 {group.items.map(item => (
 
-                                    <li key={item._id} onClick={() => openIngredientDetailsModal(item)}>
+                                    <li key={item._id} onClick={() => handleOpenIngredientDetailsModal(item)}>
                                         <button type="button" className={burgerIngredientsStyles.card}>
                                             <Counter count={1} size="default"/>
                                             <img src={item.image} alt=""/>
@@ -67,18 +82,16 @@ function BurgerIngredients({groupedData}) {
                                                 {item.name}
                                             </p>
                                         </button>
-
                                     </li>
                                 ))}
                             </ul>
-                            <Modal ref={orderDetailsModal} name="Детали ингредиента">
+                            <Modal opened={modalOpened} close={handleCloseIngredientDetailsModal} name="Детали ингредиента">
                                 <IngredientDetails data={activeItem}/>
                             </Modal>
                         </div>
                     ))}
                 </div>
             </div>
-
         </div>
     );
 }

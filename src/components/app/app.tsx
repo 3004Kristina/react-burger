@@ -2,21 +2,19 @@ import React from 'react';
 import AppHeader from '../app-header/app-header';
 import MainTitle from '../main-title/main-title';
 import BurgerConstructorWrapper from '../burger-constructor-wrapper/burger-constructor-wrapper';
+import {INGREDIENTS_URL} from '../../utils/consts';
 
 function App() {
-    const [state, setState] = React.useState({
-        hasError: false,
-        data: []
-    }),
-        url = 'https://norma.nomoreparties.space/api/ingredients';
+    const [data, setData] = React.useState([]);
+    const [hasError, setHasError] = React.useState(false);
 
     React.useEffect (() => {
         const getData = () => {
-            fetch(url)
+            fetch(INGREDIENTS_URL)
                 .then(res => res.json())
-                .then(res => setState({...state, data: res.data}))
+                .then(res => setData(res.data))
                 .catch(e => {
-                    setState({...state, hasError: true})
+                    setHasError( true)
                 });
         }
 
@@ -27,7 +25,7 @@ function App() {
         <div>
             <AppHeader/>
             <MainTitle/>
-            <BurgerConstructorWrapper data={state.data}/>
+            <BurgerConstructorWrapper data={data}/>
         </div>
     );
 }

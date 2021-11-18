@@ -5,11 +5,23 @@ import wrapperStyles from './burger-constructor-wrapper.module.css';
 import PropTypes from 'prop-types';
 
 BurgerConstructorWrapper.propTypes = {
-    data: PropTypes.array
+    data: PropTypes.arrayOf(PropTypes.shape({
+        calories: PropTypes.number,
+        carbohydrates: PropTypes.number,
+        fat: PropTypes.number,
+        price: PropTypes.number,
+        proteins: PropTypes.number,
+        type: PropTypes.string,
+        image: PropTypes.string,
+        image_large: PropTypes.string,
+        image_mobile: PropTypes.string,
+        _id: PropTypes.string
+    }))
 };
 
 function BurgerConstructorWrapper({data}) {
-    let groupedData = [
+    console.log(data);
+    const ingredientsCategories = [
         {
             type: 'bun',
             label: 'Булки',
@@ -27,14 +39,14 @@ function BurgerConstructorWrapper({data}) {
         }
     ];
 
-    data.forEach(item => groupedData.find(group => group.type === item.type)?.items.push(item));
+    data.forEach(item => ingredientsCategories.find(group => group.type === item.type)?.items.push(item));
 
     return (
         <div>
             <div className="container">
                 <div className={wrapperStyles.burger_content_wrapper}>
-                    <BurgerIngredients groupedData = {groupedData}/>
-                    <BurgerConstructor groupedData = {groupedData}/>
+                    <BurgerIngredients ingredientsCategories={ingredientsCategories}/>
+                    <BurgerConstructor ingredientsCategories={ingredientsCategories}/>
                 </div>
             </div>
         </div>

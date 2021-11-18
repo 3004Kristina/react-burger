@@ -7,14 +7,33 @@ import OrderDetails from '../order-details/order-details';
 import Modal from '../modal/modal';
 
 BurgerConstructor.propTypes = {
-    groupedData: PropTypes.array
+    ingredientsCategories: PropTypes.arrayOf(PropTypes.shape({
+        type: PropTypes.string,
+        label: PropTypes.string,
+        items: PropTypes.arrayOf(PropTypes.shape({
+            calories: PropTypes.number,
+            carbohydrates: PropTypes.number,
+            fat: PropTypes.number,
+            price: PropTypes.number,
+            proteins: PropTypes.number,
+            type: PropTypes.string,
+            image: PropTypes.string,
+            image_large: PropTypes.string,
+            image_mobile: PropTypes.string,
+            _id: PropTypes.string
+        }))
+    }))
 };
 
-function BurgerConstructor({groupedData}) {
-    const orderDetailsModal = React.useRef(null);
+function BurgerConstructor({ingredientsCategories}) {
+    const [modalOpened, setModalOpened] = React.useState(false);
 
-    function openOrderDetailsModal () {
-        orderDetailsModal.current.open();
+    function handleOpenOrderDetailsModal () {
+        setModalOpened(true);
+    }
+
+    function handleCloseOrderDetailsModal () {
+        setModalOpened(false);
     }
 
     return (
@@ -31,7 +50,7 @@ function BurgerConstructor({groupedData}) {
             {/* @todo Выводятся данные для примера - временно */}
             <div className={burgerConstructorStyles.cards_inner_wrapper}>
                 <div className={`${burgerConstructorStyles.cards_wrapper} custom-scroll pr-1`}>
-                    {groupedData.filter(group => group.type !== 'bun').map(group => (
+                    {ingredientsCategories.filter(group => group.type !== 'bun').map(group => (
                         <ul key={group.type} className={burgerConstructorStyles.cards_list}>
                             {group.items.map(item => (
                                 <li key={item._id}>
@@ -65,11 +84,11 @@ function BurgerConstructor({groupedData}) {
                     </span>
 
                 </span>
-                <Button type="primary" size="large" onClick={openOrderDetailsModal}>
+                <Button type="primary" size="large" onClick={handleOpenOrderDetailsModal}>
                     Оформить заказ
                 </Button>
             </div>
-            <Modal ref={orderDetailsModal}>
+            <Modal opened={modalOpened} close={handleCloseOrderDetailsModal}>
                 <OrderDetails/>
             </Modal>
         </div>
