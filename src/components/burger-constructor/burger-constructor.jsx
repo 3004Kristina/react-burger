@@ -1,13 +1,14 @@
 import React from 'react';
 import burgerConstructorStyles from './burger-constructor.module.css';
 import {Button, ConstructorElement, CurrencyIcon, DragIcon} from '@ya.praktikum/react-developer-burger-ui-components';
-import bun2 from '../../images/bun-02.png';
 import PropTypes from 'prop-types';
 import OrderDetails from '../order-details/order-details';
 import Modal from '../modal/modal';
+import {ORDER_URL} from '../../utils/consts';
+import {AppContext} from '../../services/app-context/app-context';
 
 BurgerConstructor.propTypes = {
-    ingredientsCategories: PropTypes.arrayOf(PropTypes.shape({
+    ingredients: PropTypes.arrayOf(PropTypes.shape({
         type: PropTypes.string,
         label: PropTypes.string,
         items: PropTypes.arrayOf(PropTypes.shape({
@@ -25,14 +26,67 @@ BurgerConstructor.propTypes = {
     }))
 };
 
-function BurgerConstructor({ingredientsCategories}) {
-    const [modalOpened, setModalOpened] = React.useState(false);
+const initialPriceState = {price: 0};
 
-    function handleOpenOrderDetailsModal () {
-        setModalOpened(true);
+
+function priceReducer(state, action) {
+    switch (action.type) {
+        case 'add':
+            return {price: state.price + action.price};
+        default:
+            throw new Error(`Wrong type of action: ${action.type}`);
+    }
+}
+
+
+function BurgerConstructor() {
+    const {bun, ingredients} = React.useContext(AppContext).basket;
+    const [modalOpened, setModalOpened] = React.useState(false);
+    const [orderNumber, setOrderNumber] = React.useState(null);
+    const [hasError, setHasError] = React.useState(false);
+    const [priceState, priceDispatch] = React.useReducer(priceReducer, initialPriceState, undefined);
+
+    React.useEffect(() => {
+        ingredients.forEach(item => {
+            return priceDispatch({
+                type: 'add',
+                price: item.price
+            });
+        });
+
+        if(bun){
+            priceDispatch({
+                type: 'add',
+                price: bun.price
+            });
+        }}, [ingredients, bun]);
+
+
+    function handleOpenOrderDetailsModal() {
+        const ingredients_id = {
+            'ingredients': ingredients.map(item => item._id)
+        };
+
+        const getOrderData = () => {
+            fetch(ORDER_URL, {
+                method: 'POST',
+                body: JSON.stringify(ingredients_id),
+                headers: {
+                    'Content-type': 'application/json; charset=UTF-8'
+                }
+            })
+                .then(res => res.json())
+                .then(res => setOrderNumber(res.order.number))
+                .then(() => setModalOpened(true))
+                .catch(e => {
+                    setHasError(true);
+                });
+        };
+
+        getOrderData();
     }
 
-    function handleCloseOrderDetailsModal () {
+    function handleCloseOrderDetailsModal() {
         setModalOpened(false);
     }
 
@@ -42,28 +96,26 @@ function BurgerConstructor({ingredientsCategories}) {
                 <ConstructorElement
                     type="top"
                     isLocked={true}
-                    text="Краторная булка N-200i (верх)"
-                    price={20}
-                    thumbnail={bun2}
+                    text={`${bun?.name} (верх)`}
+                    price={bun?.price}
+                    thumbnail={bun?.image}
                 />
             </div>
             {/* @todo Выводятся данные для примера - временно */}
             <div className={burgerConstructorStyles.cards_inner_wrapper}>
                 <div className={`${burgerConstructorStyles.cards_wrapper} custom-scroll pr-1`}>
-                    {ingredientsCategories.filter(group => group.type !== 'bun').map(group => (
-                        <ul key={group.type} className={burgerConstructorStyles.cards_list}>
-                            {group.items.map(item => (
-                                <li key={item._id}>
-                                    <DragIcon type="primary"/>
-                                    <ConstructorElement
-                                        text={item.name}
-                                        price={item.price}
-                                        thumbnail={item.image}
-                                    />
-                                </li>
-                            ))}
-                        </ul>
-                    ))}
+                    <ul className={burgerConstructorStyles.cards_list}>
+                        {ingredients.map(item => (
+                            <li key={item._id}>
+                                <DragIcon type="primary"/>
+                                <ConstructorElement
+                                    text={item.name}
+                                    price={item.price}
+                                    thumbnail={item.image}
+                                />
+                            </li>
+                        ))}
+                    </ul>
                 </div>
             </div>
 
@@ -71,16 +123,16 @@ function BurgerConstructor({ingredientsCategories}) {
                 <ConstructorElement
                     type="bottom"
                     isLocked={true}
-                    text="Краторная булка N-200i (низ)"
-                    price={20}
-                    thumbnail={bun2}
+                    text={`${bun?.name} (низ)`}
+                    price={bun?.price}
+                    thumbnail={bun?.image}
                 />
             </div>
             <div className={`${burgerConstructorStyles.btn_wrapper} mt-10`}>
                 <span className={`${burgerConstructorStyles.price_wrapper} mr-10`}>
-                    <span className="text text_type_digits-medium mr-2">610</span>
+                    <span className="text text_type_digits-medium mr-2">{priceState.price}</span>
                     <span className={burgerConstructorStyles.icon}>
-                        <CurrencyIcon type="primary" />
+                        <CurrencyIcon type="primary"/>
                     </span>
 
                 </span>
@@ -89,7 +141,7 @@ function BurgerConstructor({ingredientsCategories}) {
                 </Button>
             </div>
             <Modal opened={modalOpened} close={handleCloseOrderDetailsModal}>
-                <OrderDetails/>
+                <OrderDetails orderNumber={orderNumber}/>
             </Modal>
         </div>
     );

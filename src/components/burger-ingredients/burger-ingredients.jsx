@@ -7,9 +7,10 @@ import PropTypes from 'prop-types';
 import Modal from '../modal/modal';
 import IngredientDetails from '../ingredient-details/ingredient-details';
 import {TYPE_LABELS} from '../../utils/consts'
+import {AppContext} from '../../services/app-context/app-context';
 
 BurgerIngredients.propTypes = {
-    ingredientsCategories: PropTypes.arrayOf(PropTypes.shape({
+    catalog: PropTypes.arrayOf(PropTypes.shape({
         type: PropTypes.string,
         label: PropTypes.string,
         items: PropTypes.arrayOf(PropTypes.shape({
@@ -27,7 +28,8 @@ BurgerIngredients.propTypes = {
     }))
 };
 
-function BurgerIngredients({ingredientsCategories}) {
+function BurgerIngredients() {
+    const {catalog} = React.useContext(AppContext);
     const [current, setCurrent] = React.useState('');
     const [activeItem, setActiveItem] = React.useState({});
     const [modalOpened, setModalOpened] = React.useState(false);
@@ -35,8 +37,8 @@ function BurgerIngredients({ingredientsCategories}) {
 
 
     React.useEffect(() => {
-        setCurrent(ingredientsCategories[0].type);
-    }, [ingredientsCategories]);
+        setCurrent(catalog[0].type);
+    }, [catalog]);
 
     React.useEffect(() => {
         titleToScrollRef.current[current]?.scrollIntoView({behavior: 'smooth'});
@@ -54,14 +56,14 @@ function BurgerIngredients({ingredientsCategories}) {
     return (
         <div>
             <div style={{display: 'flex'}} className="mb-10 mr-15">
-                {ingredientsCategories.map((group) => group.items.length > 0 && (
+                {catalog.map((group) => group.items.length > 0 && (
                     <Tab key={group.type} value={group.type} active={current === group.type} onClick={setCurrent}>{group.label}</Tab>
                 ))}
             </div>
 
             <div className={burgerIngredientsStyles.cards_inner_wrapper}>
                 <div className={`${burgerIngredientsStyles.cards_wrapper} custom-scroll`}>
-                    {ingredientsCategories.map(group => group.items.length > 0 && (
+                    {catalog.map(group => group.items.length > 0 && (
                         <div key={group.type} className="mb-10">
                             <h2 className="text text_type_main-medium mb-6"
                                 ref={(el) => titleToScrollRef.current[group.type] = el}>
