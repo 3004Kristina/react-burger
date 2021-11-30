@@ -20,7 +20,6 @@ BurgerConstructorWrapper.propTypes = {
 };
 
 function BurgerConstructorWrapper({data}) {
-    console.log(data);
     const ingredientsCategories = [
         {
             type: 'bun',
