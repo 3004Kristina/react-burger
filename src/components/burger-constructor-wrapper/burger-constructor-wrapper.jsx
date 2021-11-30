@@ -3,7 +3,6 @@ import BurgerIngredients from '../burger-ingredients/burger-ingredients';
 import BurgerConstructor from '../burger-constructor/burger-constructor';
 import wrapperStyles from './burger-constructor-wrapper.module.css';
 
-
 function BurgerConstructorWrapper() {
     return (
         <div>
