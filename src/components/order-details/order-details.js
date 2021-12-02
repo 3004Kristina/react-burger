@@ -3,7 +3,7 @@ import doneImagePath from '../../images/done.gif';
 import PropTypes from 'prop-types';
 
 OrderDetails.propTypes = {
-    orderNumber: PropTypes.number
+    orderNumber: PropTypes.number.isRequired
 }
 
 export default function OrderDetails ({orderNumber}) {

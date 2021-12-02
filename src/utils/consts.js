@@ -1,6 +1,4 @@
-export const INGREDIENTS_URL = 'https://norma.nomoreparties.space/api/ingredients';
-
-export const ORDER_URL = 'https://norma.nomoreparties.space/api/orders';
+export const API_URL = 'https://norma.nomoreparties.space/api';
 
 export const TYPE_LABELS = {
     'bun': 'Булки',

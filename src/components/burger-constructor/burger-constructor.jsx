@@ -1,43 +1,25 @@
 import React from 'react';
 import burgerConstructorStyles from './burger-constructor.module.css';
 import {Button, ConstructorElement, CurrencyIcon, DragIcon} from '@ya.praktikum/react-developer-burger-ui-components';
-import PropTypes from 'prop-types';
 import OrderDetails from '../order-details/order-details';
 import Modal from '../modal/modal';
-import {ORDER_URL} from '../../utils/consts';
+import {postOrder} from '../../api/apiClient';
 import {AppContext} from '../../services/app-context/app-context';
+import ErrorModal from '../error-modal/error-modal';
 
-BurgerConstructor.propTypes = {
-    ingredients: PropTypes.arrayOf(PropTypes.shape({
-        type: PropTypes.string,
-        label: PropTypes.string,
-        items: PropTypes.arrayOf(PropTypes.shape({
-            calories: PropTypes.number,
-            carbohydrates: PropTypes.number,
-            fat: PropTypes.number,
-            price: PropTypes.number,
-            proteins: PropTypes.number,
-            type: PropTypes.string,
-            image: PropTypes.string,
-            image_large: PropTypes.string,
-            image_mobile: PropTypes.string,
-            _id: PropTypes.string
-        }))
-    }))
-};
 
 const initialPriceState = {price: 0};
-
 
 function priceReducer(state, action) {
     switch (action.type) {
         case 'add':
             return {price: state.price + action.price};
+        case 'reset':
+            return  {...initialPriceState};
         default:
             throw new Error(`Wrong type of action: ${action.type}`);
     }
 }
-
 
 function BurgerConstructor() {
     const {bun, ingredients} = React.useContext(AppContext).basket;
@@ -54,40 +36,28 @@ function BurgerConstructor() {
             });
         });
 
-        if(bun){
+        if (bun) {
             priceDispatch({
                 type: 'add',
                 price: bun.price
             });
-        }}, [ingredients, bun]);
-
+        }
+    }, [ingredients, bun]);
 
     function handleOpenOrderDetailsModal() {
-        const ingredients_id = {
-            'ingredients': ingredients.map(item => item._id)
-        };
+        const ingredients_list_id = ingredients.map(item => item._id);
 
-        const getOrderData = () => {
-            fetch(ORDER_URL, {
-                method: 'POST',
-                body: JSON.stringify(ingredients_id),
-                headers: {
-                    'Content-type': 'application/json; charset=UTF-8'
-                }
-            })
-                .then(res => res.json())
-                .then(res => setOrderNumber(res.order.number))
-                .then(() => setModalOpened(true))
-                .catch(e => {
-                    setHasError(true);
+        postOrder(ingredients_list_id)
+            .then(res => {
+                setOrderNumber(res.order.number);
+                setModalOpened(true);
+                priceDispatch({
+                    type: 'reset'
                 });
-        };
-
-        getOrderData();
-    }
-
-    function handleCloseOrderDetailsModal() {
-        setModalOpened(false);
+            })
+            .catch(e => {
+                setHasError(true);
+            });
     }
 
     return (
@@ -140,9 +110,17 @@ function BurgerConstructor() {
                     Оформить заказ
                 </Button>
             </div>
-            <Modal opened={modalOpened} close={handleCloseOrderDetailsModal}>
+            {modalOpened &&
+            <Modal close={() => setModalOpened(false)}>
                 <OrderDetails orderNumber={orderNumber}/>
             </Modal>
+            }
+
+            {hasError &&
+            <Modal close={() => setHasError(false)}>
+                <ErrorModal/>
+            </Modal>
+            }
         </div>
     );
 }

@@ -2,24 +2,21 @@ import React from 'react';
 import AppHeader from '../app-header/app-header';
 import MainTitle from '../main-title/main-title';
 import BurgerConstructorWrapper from '../burger-constructor-wrapper/burger-constructor-wrapper';
-import {INGREDIENTS_URL} from '../../utils/consts';
 import {AppContext} from '../../services/app-context/app-context';
+import {getIngredients} from '../../api/apiClient';
+import Modal from '../modal/modal';
+import ErrorModal from '../error-modal/error-modal';
 
 function App() {
     const [data, setData] = React.useState([]);
     const [hasError, setHasError] = React.useState(false);
 
     React.useEffect (() => {
-        const getData = () => {
-            fetch(INGREDIENTS_URL)
-                .then(res => res.json())
-                .then(res => setData(res.data))
-                .catch(e => {
-                    setHasError( true)
-                });
-        }
-
-        getData();
+        getIngredients()
+            .then(res => setData(res.data))
+            .catch(e => {
+                setHasError( true)
+            });
     }, [])
 
     const catalog = [
@@ -57,6 +54,11 @@ function App() {
             <AppContext.Provider value={{catalog, basket}} >
             <BurgerConstructorWrapper/>
             </AppContext.Provider>
+            {hasError &&
+            <Modal close={() => setHasError(false)}>
+                <ErrorModal/>
+            </Modal>
+            }
         </div>
     );
 }

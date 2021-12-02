@@ -3,30 +3,11 @@ import burgerIngredientsStyles from './burger-ingredients.module.css';
 import {Tab} from '@ya.praktikum/react-developer-burger-ui-components';
 import {Counter} from '@ya.praktikum/react-developer-burger-ui-components';
 import {CurrencyIcon} from '@ya.praktikum/react-developer-burger-ui-components';
-import PropTypes from 'prop-types';
 import Modal from '../modal/modal';
 import IngredientDetails from '../ingredient-details/ingredient-details';
 import {TYPE_LABELS} from '../../utils/consts'
 import {AppContext} from '../../services/app-context/app-context';
 
-BurgerIngredients.propTypes = {
-    catalog: PropTypes.arrayOf(PropTypes.shape({
-        type: PropTypes.string,
-        label: PropTypes.string,
-        items: PropTypes.arrayOf(PropTypes.shape({
-            calories: PropTypes.number,
-            carbohydrates: PropTypes.number,
-            fat: PropTypes.number,
-            price: PropTypes.number,
-            proteins: PropTypes.number,
-            type: PropTypes.string,
-            image: PropTypes.string,
-            image_large: PropTypes.string,
-            image_mobile: PropTypes.string,
-            _id: PropTypes.string
-        }))
-    }))
-};
 
 function BurgerIngredients() {
     const {catalog} = React.useContext(AppContext);
@@ -47,10 +28,6 @@ function BurgerIngredients() {
     function handleOpenIngredientDetailsModal(item) {
         setActiveItem(item);
         setModalOpened(true);
-    }
-
-    function handleCloseIngredientDetailsModal () {
-        setModalOpened(false);
     }
 
     return (
@@ -87,9 +64,11 @@ function BurgerIngredients() {
                                     </li>
                                 ))}
                             </ul>
-                            <Modal opened={modalOpened} close={handleCloseIngredientDetailsModal} name="Детали ингредиента">
+                            {modalOpened &&
+                            <Modal close={() => setModalOpened(false)} name="Детали ингредиента">
                                 <IngredientDetails data={activeItem}/>
                             </Modal>
+                            }
                         </div>
                     ))}
                 </div>
