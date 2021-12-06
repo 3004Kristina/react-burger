@@ -1,61 +1,30 @@
 import React from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import AppHeader from '../app-header/app-header';
 import MainTitle from '../main-title/main-title';
 import BurgerConstructorWrapper from '../burger-constructor-wrapper/burger-constructor-wrapper';
-import {AppContext} from '../../services/app-context/app-context';
-import {getIngredients} from '../../api/apiClient';
+import {GET_INGREDIENTS_FAILED, getIngredientsItems} from '../../services/actions';
 import Modal from '../modal/modal';
 import ErrorModal from '../error-modal/error-modal';
 
 function App() {
-    const [data, setData] = React.useState([]);
-    const [hasError, setHasError] = React.useState(false);
+    const dispatch = useDispatch();
 
-    React.useEffect (() => {
-        getIngredients()
-            .then(res => setData(res.data))
-            .catch(e => {
-                setHasError( true)
-            });
-    }, [])
+    const {ingredientsFailed} = useSelector(store => ({
+        ingredientsFailed: store.ingredientsData.ingredientsFailed,
+    }))
 
-    const catalog = [
-        {
-            type: 'bun',
-            label: 'Булки',
-            items: []
-        },
-        {
-            type: 'sauce',
-            label: 'Соусы',
-            items: []
-        },
-        {
-            type: 'main',
-            label: 'Начинки',
-            items: []
-        }
-    ];
-
-    data.forEach(item => catalog.find(group => group.type === item.type)?.items.push(item));
-
-    const ingredients = catalog.filter(group => group.type !== 'bun').map(group => group.items).flat();
-    const bun = catalog.find(group => group.type === 'bun').items[0];
-
-    const basket = {
-        ingredients,
-        bun
-    }
+    React.useEffect(() => {
+        dispatch(getIngredientsItems());
+    }, [dispatch]);
 
     return (
         <div>
             <AppHeader/>
             <MainTitle/>
-            <AppContext.Provider value={{catalog, basket}} >
             <BurgerConstructorWrapper/>
-            </AppContext.Provider>
-            {hasError &&
-            <Modal close={() => setHasError(false)}>
+            {ingredientsFailed &&
+            <Modal close={() => dispatch({type: GET_INGREDIENTS_FAILED})}>
                 <ErrorModal/>
             </Modal>
             }

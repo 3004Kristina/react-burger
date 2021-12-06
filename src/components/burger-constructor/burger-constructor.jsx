@@ -1,106 +1,92 @@
 import React from 'react';
 import burgerConstructorStyles from './burger-constructor.module.css';
-import {Button, ConstructorElement, CurrencyIcon, DragIcon} from '@ya.praktikum/react-developer-burger-ui-components';
+import {Button, ConstructorElement, CurrencyIcon} from '@ya.praktikum/react-developer-burger-ui-components';
 import OrderDetails from '../order-details/order-details';
 import Modal from '../modal/modal';
-import {postOrder} from '../../api/apiClient';
-import {AppContext} from '../../services/app-context/app-context';
+import {useDrop} from 'react-dnd';
 import ErrorModal from '../error-modal/error-modal';
+import {useDispatch, useSelector} from 'react-redux';
+import {ADD_BASKET_INGREDIENT, BASKET_UPDATE_BY_SORT, POST_ORDER_FAILED, postOrderItems, RESET_ORDER} from '../../services/actions';
+import BurgerConstructorItem from './burger-constructor-item';
 
-
-const initialPriceState = {price: 0};
-
-function priceReducer(state, action) {
-    switch (action.type) {
-        case 'add':
-            return {price: state.price + action.price};
-        case 'reset':
-            return  {...initialPriceState};
-        default:
-            throw new Error(`Wrong type of action: ${action.type}`);
-    }
-}
 
 function BurgerConstructor() {
-    const {bun, ingredients} = React.useContext(AppContext).basket;
-    const [modalOpened, setModalOpened] = React.useState(false);
-    const [orderNumber, setOrderNumber] = React.useState(null);
-    const [hasError, setHasError] = React.useState(false);
-    const [priceState, priceDispatch] = React.useReducer(priceReducer, initialPriceState, undefined);
+    const dispatch = useDispatch();
+    const {basket, bun, orderNumber, postOrderFailed} = useSelector(store => ({
+        basket: store.constructorData.basket,
+        bun: store.constructorData.basket.find(item => item.type === 'bun'),
+        orderNumber: store.constructorData.orderNumber,
+        postOrderFailed: store.constructorData.postOrderFailed
+    }));
 
-    React.useEffect(() => {
-        ingredients.forEach(item => {
-            return priceDispatch({
-                type: 'add',
-                price: item.price
-            });
-        });
-
-        if (bun) {
-            priceDispatch({
-                type: 'add',
-                price: bun.price
+    const [, dropTarget] = useDrop({
+        accept: 'items',
+        drop(item) {
+            dispatch({
+                type: ADD_BASKET_INGREDIENT,
+                item
             });
         }
-    }, [ingredients, bun]);
+    });
+
+    let totalPrice = basket.reduce((total, item) => total + item.price, 0);
 
     function handleOpenOrderDetailsModal() {
-        const ingredients_list_id = ingredients.map(item => item._id);
+        const order_id_list = basket?.map(item => item._id);
 
-        postOrder(ingredients_list_id)
-            .then(res => {
-                setOrderNumber(res.order.number);
-                setModalOpened(true);
-                priceDispatch({
-                    type: 'reset'
-                });
-            })
-            .catch(e => {
-                setHasError(true);
-            });
+        dispatch(postOrderItems(order_id_list));
     }
 
-    return (
-        <div className={`${burgerConstructorStyles.constructor_wrapper} pl-4`}>
+    const moveCard = (dragIndex, hoverIndex) => {
+        dispatch({
+            type: BASKET_UPDATE_BY_SORT,
+            dragIndex,
+            hoverIndex
+        })
+    }
+
+   return (
+        <div ref={dropTarget} className={`${burgerConstructorStyles.constructor_wrapper} pl-4`}>
             <div className="pl-8 pr-4">
-                <ConstructorElement
-                    type="top"
-                    isLocked={true}
-                    text={`${bun?.name} (верх)`}
-                    price={bun?.price}
-                    thumbnail={bun?.image}
-                />
+                {bun &&
+                    <ConstructorElement
+                        type="top"
+                        isLocked={true}
+                        text={`${bun?.name} (верх)`}
+                        price={bun?.price}
+                        thumbnail={bun?.image}
+                    />
+                }
             </div>
-            {/* @todo Выводятся данные для примера - временно */}
             <div className={burgerConstructorStyles.cards_inner_wrapper}>
                 <div className={`${burgerConstructorStyles.cards_wrapper} custom-scroll pr-1`}>
-                    <ul className={burgerConstructorStyles.cards_list}>
-                        {ingredients.map(item => (
-                            <li key={item._id}>
-                                <DragIcon type="primary"/>
-                                <ConstructorElement
-                                    text={item.name}
-                                    price={item.price}
-                                    thumbnail={item.image}
-                                />
-                            </li>
-                        ))}
-                    </ul>
+                    <div className={burgerConstructorStyles.cards_list}>
+                        {basket.map((item, index) => {
+                            if(item.type === 'bun'){
+                                return null;
+                            }
+                            return (
+                                <BurgerConstructorItem key={index} item={item} index={index} moveCard={moveCard}/>
+                            )
+                        })}
+                    </div>
                 </div>
             </div>
 
             <div className="pl-8 pr-4">
-                <ConstructorElement
-                    type="bottom"
-                    isLocked={true}
-                    text={`${bun?.name} (низ)`}
-                    price={bun?.price}
-                    thumbnail={bun?.image}
-                />
+                {bun &&
+                    <ConstructorElement
+                        type="bottom"
+                        isLocked={true}
+                        text={`${bun?.name} (низ)`}
+                        price={bun?.price}
+                        thumbnail={bun?.image}
+                    />
+                }
             </div>
             <div className={`${burgerConstructorStyles.btn_wrapper} mt-10`}>
                 <span className={`${burgerConstructorStyles.price_wrapper} mr-10`}>
-                    <span className="text text_type_digits-medium mr-2">{priceState.price}</span>
+                    <span className="text text_type_digits-medium mr-2">{totalPrice}</span>
                     <span className={burgerConstructorStyles.icon}>
                         <CurrencyIcon type="primary"/>
                     </span>
@@ -110,16 +96,16 @@ function BurgerConstructor() {
                     Оформить заказ
                 </Button>
             </div>
-            {modalOpened &&
-            <Modal close={() => setModalOpened(false)}>
-                <OrderDetails orderNumber={orderNumber}/>
-            </Modal>
+            {orderNumber &&
+                <Modal close={() => dispatch({type: RESET_ORDER})}>
+                    <OrderDetails orderNumber={orderNumber}/>
+                </Modal>
             }
 
-            {hasError &&
-            <Modal close={() => setHasError(false)}>
-                <ErrorModal/>
-            </Modal>
+            {postOrderFailed &&
+                <Modal close={() => dispatch({type: POST_ORDER_FAILED})}>
+                    <ErrorModal/>
+                </Modal>
             }
         </div>
     );

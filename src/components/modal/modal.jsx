@@ -7,7 +7,6 @@ import PropTypes from 'prop-types';
 Modal.propTypes = {
     name: PropTypes.string,
     children: PropTypes.node,
-    opened: PropTypes.bool
 }
 
 export default function Modal(props) {
@@ -29,7 +28,6 @@ export default function Modal(props) {
 
     function close() {
         props.close();
-
     }
 
     return ReactDOM.createPortal(
