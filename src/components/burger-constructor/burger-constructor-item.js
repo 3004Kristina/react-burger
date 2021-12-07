@@ -4,18 +4,29 @@ import { useDrag, useDrop } from 'react-dnd';
 import burgerConstructorStyles from './burger-constructor.module.css';
 import {ConstructorElement, DragIcon} from '@ya.praktikum/react-developer-burger-ui-components';
 import {useDispatch} from 'react-redux';
-import {DELETE_BASKET_ITEM_BY_INDEX} from '../../services/actions';
+import {DELETE_BASKET_ITEM_BY_INDEX} from '../../services/actions/constructor';
 import PropTypes from 'prop-types';
 
-
 BurgerConstructorItem.propTypes = {
-    item: PropTypes.object.isRequired,
+    item: PropTypes.shape({
+        calories: PropTypes.number,
+        carbohydrates: PropTypes.number,
+        fat: PropTypes.number,
+        price: PropTypes.number,
+        proteins: PropTypes.number,
+        type: PropTypes.string,
+        image: PropTypes.string,
+        image_large: PropTypes.string,
+        image_mobile: PropTypes.string,
+        _id: PropTypes.string
+    }).isRequired,
     index: PropTypes.number.isRequired,
     moveCard: PropTypes.func.isRequired
 }
 
-function BurgerConstructorItem({item, index, moveCard}) {
+function BurgerConstructorItem({item, index, id, moveCard}) {
     const dispatch = useDispatch();
+    console.log(id);
 
     function handleDeleteItem(index) {
         dispatch({
@@ -61,7 +72,7 @@ function BurgerConstructorItem({item, index, moveCard}) {
     const [{ isDragging }, drag] = useDrag({
         type: 'basket-item',
         item: () => {
-            return { id: item._id, index };
+            return { id, index };
         },
         collect: (monitor) => ({
             isDragging: monitor.isDragging(),

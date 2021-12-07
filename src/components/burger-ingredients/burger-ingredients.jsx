@@ -5,7 +5,7 @@ import Modal from '../modal/modal';
 import IngredientDetails from '../ingredient-details/ingredient-details';
 import {TYPE_LABELS} from '../../utils/consts';
 import {useDispatch, useSelector} from 'react-redux';
-import {RESET_INGREDIENTS_DETAILS} from '../../services/actions';
+import {RESET_INGREDIENTS_DETAILS} from '../../services/actions/ingredients-detail-modal';
 import BurgerIngredientItem from './burger-ingredient-item';
 
 
@@ -14,7 +14,7 @@ function BurgerIngredients() {
 
     const {data, activeIngredientDetailId} = useSelector(store => ({
         data: store.ingredientsData.ingredients,
-        activeIngredientDetailId: store.ingredientsData.activeIngredientDetailId
+        activeIngredientDetailId: store.ingredientsDetail.activeIngredientDetailId
     }));
 
     const catalog = [
@@ -53,11 +53,12 @@ function BurgerIngredients() {
 
     function handleScrollWrapper() {
         catalog.forEach(group => {
-            let topCurrent = titleToScrollRef.current[group.type].getBoundingClientRect().top,
-                bottomTabWrapper = tabWrapperRef.current.getBoundingClientRect().bottom,
-                tabWrapperMargin = tabWrapperRef.current.computedStyleMap().get('margin-bottom').value,
-                max = bottomTabWrapper + tabWrapperMargin,
-                min = bottomTabWrapper;
+            const topCurrent = titleToScrollRef.current[group.type].getBoundingClientRect().top;
+            const bottomTabWrapper = tabWrapperRef.current.getBoundingClientRect().bottom;
+            const tabWrapper = document.getElementById('tab_wrapper');
+            const tabWrapperMargin = parseInt(window.getComputedStyle(tabWrapper).getPropertyValue('margin-bottom'));
+            const max = bottomTabWrapper + tabWrapperMargin;
+            const min = bottomTabWrapper;
 
             if (topCurrent > min && topCurrent < max) {
                 setCurrent(group.type);
@@ -68,14 +69,14 @@ function BurgerIngredients() {
     function handleScrollToElem(type) {
         setTimeout(() => {
             setCurrent(type);
-        }, 100)
+        }, 100);
 
         titleToScrollRef.current[type]?.scrollIntoView({behavior: 'smooth'});
     }
 
     return (
         <div>
-            <div ref={tabWrapperRef} style={{display: 'flex'}} className="mb-10 mr-15">
+            <div id="tab_wrapper" ref={tabWrapperRef} style={{display: 'flex'}} className="mb-10 mr-15">
                 {catalog.map((group) => group.items.length > 0 && (
                     <Tab key={group.type} value={group.type} active={current === group.type} onClick={() => handleScrollToElem(group.type)}>{group.label}</Tab>
                 ))}

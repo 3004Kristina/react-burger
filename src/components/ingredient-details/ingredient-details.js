@@ -5,7 +5,7 @@ import {useSelector} from 'react-redux';
 
 export default function IngredientDetails () {
     const {item} = useSelector(store => ({
-        item: store.ingredientsData.ingredients.find(item => item._id === store.ingredientsData.activeIngredientDetailId)
+        item: store.ingredientsData.ingredients.find(item => item._id === store.ingredientsDetail.activeIngredientDetailId)
     }))
 
     return (

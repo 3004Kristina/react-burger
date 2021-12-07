@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import AppHeader from '../app-header/app-header';
 import MainTitle from '../main-title/main-title';
 import BurgerConstructorWrapper from '../burger-constructor-wrapper/burger-constructor-wrapper';
-import {GET_INGREDIENTS_FAILED, getIngredientsItems} from '../../services/actions';
+import { getIngredientsItems, RESET_INGREDIENTS_FAILED} from '../../services/actions/ingredients';
 import Modal from '../modal/modal';
 import ErrorModal from '../error-modal/error-modal';
 
@@ -24,7 +24,7 @@ function App() {
             <MainTitle/>
             <BurgerConstructorWrapper/>
             {ingredientsFailed &&
-            <Modal close={() => dispatch({type: GET_INGREDIENTS_FAILED})}>
+            <Modal close={() => dispatch({type: RESET_INGREDIENTS_FAILED})}>
                 <ErrorModal/>
             </Modal>
             }

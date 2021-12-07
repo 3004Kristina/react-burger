@@ -5,7 +5,7 @@ import wrapperStyles from './burger-constructor-wrapper.module.css';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { DndProvider } from 'react-dnd';
 
-function BurgerConstructorWrapper({catalog}) {
+function BurgerConstructorWrapper() {
     return (
         <div>
             <div className="container">
