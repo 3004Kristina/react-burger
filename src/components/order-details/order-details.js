@@ -1,10 +1,15 @@
 import React from 'react';
 import doneImagePath from '../../images/done.gif';
+import PropTypes from 'prop-types';
 
-export default function OrderDetails () {
+OrderDetails.propTypes = {
+    orderNumber: PropTypes.number.isRequired
+}
+
+export default function OrderDetails ({orderNumber}) {
     return(
         <>
-            <span className="text text_type_digits-large mt-20 mb-8">034536</span>
+            <span className="text text_type_digits-large mt-20 mb-8">{orderNumber}</span>
             <span className="text text_type_main-medium mb-15">идентификатор заказа</span>
             <img className="mb-15" src={doneImagePath} alt='done' />
             <span className="text text_type_main-default mb-2">Ваш заказ начали готовить</span>

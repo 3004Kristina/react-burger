@@ -1,86 +1,98 @@
 import React from 'react';
+import uuid from 'react-uuid';
 import burgerConstructorStyles from './burger-constructor.module.css';
-import {Button, ConstructorElement, CurrencyIcon, DragIcon} from '@ya.praktikum/react-developer-burger-ui-components';
-import bun2 from '../../images/bun-02.png';
-import PropTypes from 'prop-types';
+import {Button, ConstructorElement, CurrencyIcon} from '@ya.praktikum/react-developer-burger-ui-components';
 import OrderDetails from '../order-details/order-details';
 import Modal from '../modal/modal';
+import {useDrop} from 'react-dnd';
+import ErrorModal from '../error-modal/error-modal';
+import {useDispatch, useSelector} from 'react-redux';
+import {postOrderItems, RESET_ORDER, RESET_ORDER_FAILED} from '../../services/actions/order';
+import {ADD_BASKET_INGREDIENT, BASKET_UPDATE_BY_SORT, RESET_BASKET} from '../../services/actions/constructor';
+import BurgerConstructorItem from './burger-constructor-item';
 
-BurgerConstructor.propTypes = {
-    ingredientsCategories: PropTypes.arrayOf(PropTypes.shape({
-        type: PropTypes.string,
-        label: PropTypes.string,
-        items: PropTypes.arrayOf(PropTypes.shape({
-            calories: PropTypes.number,
-            carbohydrates: PropTypes.number,
-            fat: PropTypes.number,
-            price: PropTypes.number,
-            proteins: PropTypes.number,
-            type: PropTypes.string,
-            image: PropTypes.string,
-            image_large: PropTypes.string,
-            image_mobile: PropTypes.string,
-            _id: PropTypes.string
-        }))
-    }))
-};
 
-function BurgerConstructor({ingredientsCategories}) {
-    const [modalOpened, setModalOpened] = React.useState(false);
+function BurgerConstructor() {
+    const dispatch = useDispatch();
+    const {basket, bun, orderNumber, postOrderFailed} = useSelector(store => ({
+        basket: store.constructorData.basket,
+        bun: store.constructorData.basket.find(item => item.type === 'bun'),
+        orderNumber: store.orderData.orderNumber,
+        postOrderFailed: store.orderData.postOrderFailed
+    }));
+    const [, dropTarget] = useDrop({
+        accept: 'items',
+        drop(item) {
+            dispatch({
+                type: ADD_BASKET_INGREDIENT,
+                item: {...item, id: uuid()}
+            });
+        }
+    });
+    const totalPrice = basket.reduce((total, item) => total + item.price, 0);
+    const moveCard = (dragIndex, hoverIndex) => {
+        dispatch({
+            type: BASKET_UPDATE_BY_SORT,
+            dragIndex,
+            hoverIndex
+        });
+    };
 
-    function handleOpenOrderDetailsModal () {
-        setModalOpened(true);
+    function handleOpenOrderDetailsModal() {
+        const order_id_list = basket?.map(item => item._id);
+
+        dispatch(postOrderItems(order_id_list));
     }
 
-    function handleCloseOrderDetailsModal () {
-        setModalOpened(false);
+    function handleCloseOrderModal() {
+        dispatch({type: RESET_ORDER});
+        dispatch({type: RESET_BASKET});
     }
 
     return (
-        <div className={`${burgerConstructorStyles.constructor_wrapper} pl-4`}>
+        <div ref={dropTarget} className={`${burgerConstructorStyles.constructor_wrapper} pl-4`}>
             <div className="pl-8 pr-4">
-                <ConstructorElement
-                    type="top"
-                    isLocked={true}
-                    text="Краторная булка N-200i (верх)"
-                    price={20}
-                    thumbnail={bun2}
-                />
+                {bun &&
+                    <ConstructorElement
+                        type="top"
+                        isLocked={true}
+                        text={`${bun.name} (верх)`}
+                        price={bun.price}
+                        thumbnail={bun.image}
+                    />
+                }
             </div>
-            {/* @todo Выводятся данные для примера - временно */}
             <div className={burgerConstructorStyles.cards_inner_wrapper}>
                 <div className={`${burgerConstructorStyles.cards_wrapper} custom-scroll pr-1`}>
-                    {ingredientsCategories.filter(group => group.type !== 'bun').map(group => (
-                        <ul key={group.type} className={burgerConstructorStyles.cards_list}>
-                            {group.items.map(item => (
-                                <li key={item._id}>
-                                    <DragIcon type="primary"/>
-                                    <ConstructorElement
-                                        text={item.name}
-                                        price={item.price}
-                                        thumbnail={item.image}
-                                    />
-                                </li>
-                            ))}
-                        </ul>
-                    ))}
+                    <div className={burgerConstructorStyles.cards_list}>
+                        {basket.map((item, index) => {
+                            if (item.type === 'bun') {
+                                return null;
+                            }
+                            return (
+                                <BurgerConstructorItem key={item.id} item={item} id={item.id} index={index} moveCard={moveCard}/>
+                            );
+                        })}
+                    </div>
                 </div>
             </div>
 
             <div className="pl-8 pr-4">
-                <ConstructorElement
-                    type="bottom"
-                    isLocked={true}
-                    text="Краторная булка N-200i (низ)"
-                    price={20}
-                    thumbnail={bun2}
-                />
+                {bun &&
+                    <ConstructorElement
+                        type="bottom"
+                        isLocked={true}
+                        text={`${bun.name} (низ)`}
+                        price={bun.price}
+                        thumbnail={bun.image}
+                    />
+                }
             </div>
             <div className={`${burgerConstructorStyles.btn_wrapper} mt-10`}>
                 <span className={`${burgerConstructorStyles.price_wrapper} mr-10`}>
-                    <span className="text text_type_digits-medium mr-2">610</span>
+                    <span className="text text_type_digits-medium mr-2">{totalPrice}</span>
                     <span className={burgerConstructorStyles.icon}>
-                        <CurrencyIcon type="primary" />
+                        <CurrencyIcon type="primary"/>
                     </span>
 
                 </span>
@@ -88,9 +100,17 @@ function BurgerConstructor({ingredientsCategories}) {
                     Оформить заказ
                 </Button>
             </div>
-            <Modal opened={modalOpened} close={handleCloseOrderDetailsModal}>
-                <OrderDetails/>
-            </Modal>
+            {orderNumber &&
+                <Modal close={handleCloseOrderModal}>
+                    <OrderDetails orderNumber={orderNumber}/>
+                </Modal>
+            }
+
+            {postOrderFailed &&
+                <Modal close={() => dispatch({type: RESET_ORDER_FAILED})}>
+                    <ErrorModal/>
+                </Modal>
+            }
         </div>
     );
 }

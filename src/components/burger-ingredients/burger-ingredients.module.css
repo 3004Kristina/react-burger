@@ -21,8 +21,11 @@
     grid-column-gap: 24px;
     grid-row-gap: 32px;
     grid-template-columns: 1fr 1fr;
-}
 
+}
+.cards_list li{
+    background: #131316;
+}
 .card{
     position: relative;
     width: 272px;
@@ -34,6 +37,7 @@
     background: none;
     outline: none;
     color: inherit;
+
 }
 
 .price{

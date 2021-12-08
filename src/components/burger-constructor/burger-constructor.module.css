@@ -22,16 +22,14 @@
     padding: 0;
 }
 
-.cards_list + .cards_list{
-    margin-top: 10px;
-}
 
-.cards_list li{
+.card {
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: flex-start;
     gap: 4px;
+    background: #131316;
 }
 
 .btn_wrapper{
