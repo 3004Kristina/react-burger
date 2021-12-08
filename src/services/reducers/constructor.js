@@ -30,7 +30,6 @@ export const constructorReducer = (state = constructorInitialState, action) => {
             let basket = [...state.basket];
             let sortableElements = basket.splice(action.dragIndex, 1);
             basket.splice(action.hoverIndex, 0, ...sortableElements);
-            console.log(sortableElements);
 
             return {...state, basket}
         }

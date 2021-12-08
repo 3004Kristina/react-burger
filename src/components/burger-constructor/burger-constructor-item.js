@@ -21,12 +21,12 @@ BurgerConstructorItem.propTypes = {
         _id: PropTypes.string
     }).isRequired,
     index: PropTypes.number.isRequired,
+    id: PropTypes.string.isRequired,
     moveCard: PropTypes.func.isRequired
 }
 
 function BurgerConstructorItem({item, index, id, moveCard}) {
     const dispatch = useDispatch();
-    console.log(id);
 
     function handleDeleteItem(index) {
         dispatch({
