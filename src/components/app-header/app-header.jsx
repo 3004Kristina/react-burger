@@ -4,6 +4,7 @@ import {Logo} from '@ya.praktikum/react-developer-burger-ui-components';
 import {BurgerIcon} from '@ya.praktikum/react-developer-burger-ui-components';
 import {ListIcon} from '@ya.praktikum/react-developer-burger-ui-components';
 import {ProfileIcon} from '@ya.praktikum/react-developer-burger-ui-components';
+import {NavLink} from 'react-router-dom';
 
 
 export default function AppHeader() {
@@ -14,10 +15,10 @@ export default function AppHeader() {
                     <nav className={appHeaderStyles.nav_wrapper}>
                         <ul className={appHeaderStyles.nav}>
                             <li>
-                                <a href="#" className="text text_type_main-default mr-10">
+                                <NavLink to='/' className="text text_type_main-default mr-10">
                                     <BurgerIcon type="primary"/>
                                     <span className="ml-2">Конструктор</span>
-                                </a>
+                                </NavLink>
                             </li>
                             <li>
                                 <a href="#" className="text text_type_main-default text_color_inactive">
@@ -27,12 +28,14 @@ export default function AppHeader() {
                             </li>
                         </ul>
                     </nav>
-                    <Logo/>
+                    <div className={appHeaderStyles.logo}>
+                        <Logo/>
+                    </div>
                     <div>
-                        <a href="#" className="text text_type_main-default text_color_inactive">
+                        <NavLink to='/profile' className="text text_type_main-default text_color_inactive">
                             <ProfileIcon type="secondary"/>
                             <span className="ml-2">Личный кабинет</span>
-                        </a>
+                        </NavLink>
                     </div>
                 </div>
             </div>

@@ -1,20 +1,13 @@
 import React from 'react';
 import burgerIngredientsStyles from './burger-ingredients.module.css';
 import {Tab} from '@ya.praktikum/react-developer-burger-ui-components';
-import Modal from '../modal/modal';
-import IngredientDetails from '../ingredient-details/ingredient-details';
 import {TYPE_LABELS} from '../../utils/consts';
-import {useDispatch, useSelector} from 'react-redux';
-import {RESET_INGREDIENTS_DETAILS} from '../../services/actions/ingredients-detail-modal';
+import { useSelector} from 'react-redux';
 import BurgerIngredientItem from './burger-ingredient-item';
 
-
 function BurgerIngredients() {
-    const dispatch = useDispatch();
-
-    const {data, activeIngredientDetailId} = useSelector(store => ({
+    const {data} = useSelector(store => ({
         data: store.ingredientsData.ingredients,
-        activeIngredientDetailId: store.ingredientsDetail.activeIngredientDetailId
     }));
 
     const catalog = [
@@ -45,11 +38,6 @@ function BurgerIngredients() {
         setCurrent(catalog[0].type);
     }, []);
 
-    function handleCloseIngredientDetailsModal() {
-        dispatch({
-            type: RESET_INGREDIENTS_DETAILS
-        });
-    }
 
     function handleScrollWrapper() {
         catalog.forEach(group => {
@@ -95,11 +83,6 @@ function BurgerIngredients() {
                                     <BurgerIngredientItem key={item._id} item={item}/>
                                 ))}
                             </ul>
-                            {activeIngredientDetailId !== null &&
-                                <Modal close={handleCloseIngredientDetailsModal} name="Детали ингредиента">
-                                    <IngredientDetails/>
-                                </Modal>
-                            }
                         </div>
                     ))}
                 </div>

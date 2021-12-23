@@ -6,6 +6,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {useDrag} from 'react-dnd';
 import {ACTIVATE_INGREDIENTS_DETAILS} from '../../services/actions/ingredients-detail-modal';
 import PropTypes from 'prop-types';
+import {Link, useLocation} from 'react-router-dom';
 
 
 BurgerIngredientItem.propTypes = {
@@ -25,6 +26,7 @@ BurgerIngredientItem.propTypes = {
 
 function BurgerIngredientItem({item}) {
     const dispatch = useDispatch();
+    const location = useLocation();
     const {count} = useSelector(store => ({
         count: store.constructorData.basket.filter(({_id}) => item._id === _id).length
     }));
@@ -45,20 +47,25 @@ function BurgerIngredientItem({item}) {
     }
 
     return (
-        <li ref={refDrag} onClick={() => handleOpenIngredientDetailsModal(item._id)} style={{opacity}}>
-            <button type="button" className={burgerIngredientsStyles.card}>
-                {count > 0 &&
-                    <Counter count={count} size="default"/>
-                }
-                <img src={item.image} alt=""/>
-                <p className={`${burgerIngredientsStyles.price} text text_type_digits-default p-2`}>
-                    {item.price}
-                    <CurrencyIcon type="primary"/>
-                </p>
-                <p style={{textAlign: 'center'}} className="text text_type_main-small pb-5">
-                    {item.name}
-                </p>
-            </button>
+        <li ref={refDrag} style={{opacity}}>
+            <Link to={{
+                pathname: `/ingredients/${item._id}`,
+                state: { background: location },
+            }}>
+                <button type="button" className={burgerIngredientsStyles.card} onClick={() => handleOpenIngredientDetailsModal(item._id)}>
+                    {count > 0 &&
+                        <Counter count={count} size="default"/>
+                    }
+                    <img src={item.image} alt=""/>
+                    <p className={`${burgerIngredientsStyles.price} text text_type_digits-default p-2`}>
+                        {item.price}
+                        <CurrencyIcon type="primary"/>
+                    </p>
+                    <p style={{textAlign: 'center'}} className="text text_type_main-small pb-5">
+                        {item.name}
+                    </p>
+                </button>
+            </Link>
         </li>
     );
 }
