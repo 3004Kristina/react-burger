@@ -1,4 +1,4 @@
-import {postOrder} from '../../api/apiClient';
+import { postOrder } from '../../api/apiClient';
 
 export const POST_ORDER_REQUEST = 'POST_ORDER_REQUEST';
 export const POST_ORDER_SUCCESS = 'POST_ORDER_SUCCESS';
@@ -7,25 +7,29 @@ export const POST_ORDER_FAILED = 'POST_ORDER_FAILED';
 export const RESET_ORDER_FAILED = 'RESET_ORDER_FAILED';
 export const RESET_ORDER = 'RESET_ORDER';
 
-export function postOrderItems(order_id_list) {
-    return function(dispatch) {
+export function postOrderItems(orderIdList) {
+  return function (dispatch) {
+    dispatch({
+      type: POST_ORDER_REQUEST,
+    });
+    postOrder(orderIdList)
+      .then((res) => {
+        if (!res?.success) {
+          throw res.message;
+        }
         dispatch({
-            type: POST_ORDER_REQUEST
+          type: POST_ORDER_SUCCESS,
+          orderNumber: res.order.number,
         });
-        postOrder(order_id_list)
-            .then(res => {
-                if (!res?.success) {
-                    return Promise.reject();
-                }
-                dispatch({
-                    type: POST_ORDER_SUCCESS,
-                    orderNumber: res.order.number
-                });
-            })
-            .catch(() => {
-                dispatch({
-                    type: POST_ORDER_FAILED
-                });
-            });
-    };
+      })
+      .catch((error) => {
+        // eslint-disable-next-line no-console
+        console.error(error);
+
+        dispatch({
+          type: POST_ORDER_FAILED,
+          error: error.message,
+        });
+      });
+  };
 }
