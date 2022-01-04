@@ -9,8 +9,8 @@ export default function ResetPasswordPage() {
   const dispatch = useDispatch();
   const [password, setPassword] = React.useState('');
   const [code, setCode] = React.useState('');
-  const { emailChecked, updatePassword } = useSelector((store) => ({
-    emailChecked: store.emailCheckData.emailChecked,
+  const { resetPassword, updatePassword } = useSelector((store) => ({
+    resetPassword: store.resetPasswordData.resetPassword,
     updatePassword: store.updatePasswordData.updatePassword,
   }));
   const inputRef = React.useRef(null);
@@ -22,7 +22,7 @@ export default function ResetPasswordPage() {
     }));
   }
 
-  if (!emailChecked) {
+  if (!resetPassword) {
     return (
       <Redirect
         to={{

@@ -4,36 +4,36 @@ import {
   PASSWORD_RESET_FAILED,
 } from '../actions/password-reset';
 
-const emailCheckInitialState = {
-  emailCheckFailed: false,
-  emailCheckRequest: false,
-  emailChecked: false,
+const resetPasswordInitialState = {
+  resetPasswordFailed: false,
+  resetPasswordRequest: false,
+  resetPassword: false,
   error: null,
 };
 
-export default (state = emailCheckInitialState, action = {}) => {
+export default (state = resetPasswordInitialState, action = {}) => {
   switch (action.type) {
     case PASSWORD_RESET_REQUEST: {
       return {
         ...state,
-        emailCheckRequest: true,
+        resetPasswordRequest: true,
         error: null,
       };
     }
     case PASSWORD_RESET_SUCCESS: {
       return {
         ...state,
-        emailCheckFailed: false,
-        emailCheckRequest: false,
-        emailChecked: true,
+        resetPasswordFailed: false,
+        resetPasswordRequest: false,
+        resetPassword: true,
         error: null,
       };
     }
     case PASSWORD_RESET_FAILED: {
       return {
-        ...emailCheckInitialState,
-        emailCheckFailed: true,
-        emailCheckRequest: false,
+        ...resetPasswordInitialState,
+        resetPasswordFailed: true,
+        resetPasswordRequest: false,
         error: action.error,
       };
     }

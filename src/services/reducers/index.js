@@ -5,7 +5,7 @@ import orderReducer from './order';
 import ingredientsDetailReducer from './ingredients-detail-modal';
 import createUserReducer from './create-user';
 import loginUserReducer from './login';
-import emailCheckReducer from './password-reset';
+import resetPasswordInitialState from './password-reset';
 import updatePasswordReducer from './set-new-password';
 import getUserReducer from './get-user-info';
 
@@ -16,7 +16,7 @@ const rootReducer = combineReducers({
   ingredientsDetail: ingredientsDetailReducer,
   createUserData: createUserReducer,
   loginData: loginUserReducer,
-  emailCheckData: emailCheckReducer,
+  resetPasswordData: resetPasswordInitialState,
   updatePasswordData: updatePasswordReducer,
   getUserData: getUserReducer,
 });
