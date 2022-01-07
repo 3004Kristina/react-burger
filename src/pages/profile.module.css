@@ -1,0 +1,40 @@
+.profile_wrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: center;
+    padding-top: 120px;
+    gap: 60px;
+}
+
+.btn_wrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.cancel {
+    display: block;
+    color: #4c4cff;
+    background: transparent;
+    cursor: pointer;
+    box-shadow: none;
+    border: none;
+    outline: none;
+}
+
+.activeLink {
+    color: #ffffff;
+}
+
+.profile_link_wrapper {
+    width: 320px;
+}
+
+.cancel_btn {
+    background: transparent;
+    border: none;
+    outline: none;
+    cursor: pointer;
+}

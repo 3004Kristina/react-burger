@@ -1,52 +1,46 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import PropTypes from 'prop-types';
 import modalStyles from './modal.module.css';
 import ModalOverlay from './modal-overlay';
-import PropTypes from 'prop-types';
-
-Modal.propTypes = {
-    name: PropTypes.string,
-    children: PropTypes.node,
-}
 
 export default function Modal(props) {
-    React.useEffect(() => {
-        document.addEventListener('keyup', handleEscClose);
-
-        return () => {
-            document.removeEventListener('keyup',handleEscClose);
-        }
-    }, [])
-
-    function handleEscClose(e) {
-        if (e.key !== 'Escape') {
-            return;
-        }
-
-        close();
+  function handleEscClose(e) {
+    if (e.key !== 'Escape') {
+      return;
     }
 
-    function close() {
-        props.close();
-    }
+    props.onClose();
+  }
 
-    return ReactDOM.createPortal(
-        <div>
-            <ModalOverlay onClick={close}/>
-            <div className={modalStyles.modal} onClick={(e) => {
-                e.stopPropagation();
-            }}>
-                <button className={modalStyles.modal_close} onClick={close}/>
+  React.useEffect(() => {
+    document.addEventListener('keyup', handleEscClose);
 
-                <div className={`text text_type_main-large ${modalStyles.modal_title}`}>
-                    {props.name}
-                </div>
+    return () => {
+      document.removeEventListener('keyup', handleEscClose);
+    };
+  }, []);
 
-                <div className={modalStyles.modal_content}>
-                    {props.children}
-                </div>
-            </div>
-        </div>,
-        document.getElementById('modal-root')
-    );
+  return ReactDOM.createPortal(
+    <div>
+      <ModalOverlay onClick={props.onClose} />
+      <div className={modalStyles.modal}>
+        <button type="button" className={modalStyles.modal_close} onClick={props.onClose} />
+
+        <div className={`text text_type_main-large ${modalStyles.modal_title}`}>
+          {props.name}
+        </div>
+
+        <div className={modalStyles.modal_content}>
+          {props.children}
+        </div>
+      </div>
+    </div>,
+    document.getElementById('modal-root'),
+  );
 }
+
+Modal.propTypes = {
+  name: PropTypes.string,
+  children: PropTypes.node,
+};

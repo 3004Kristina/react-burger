@@ -1,0 +1,19 @@
+.login_wrapper{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 180px auto 0;
+}
+
+.link_wrapper{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.link{
+    color: #4C4CFF;
+}
+
