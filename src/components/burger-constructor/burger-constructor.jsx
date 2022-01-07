@@ -46,13 +46,14 @@ function BurgerConstructor() {
     },
   });
   const totalPrice = basket.reduce((total, item) => total + item.price, 0);
-  const moveCard = (dragIndex, hoverIndex) => {
+
+  function moveCard(dragIndex, hoverIndex) {
     dispatch({
       type: BASKET_UPDATE_BY_SORT,
       dragIndex,
       hoverIndex,
     });
-  };
+  }
 
   function handleOpenOrderDetailsModal() {
     const orderIdList = basket?.map(({ _id }) => _id);
@@ -63,6 +64,10 @@ function BurgerConstructor() {
   function handleCloseOrderModal() {
     dispatch({ type: RESET_ORDER });
     dispatch({ type: RESET_BASKET });
+  }
+
+  function handleResetOrderFailed() {
+    dispatch({ type: RESET_ORDER_FAILED });
   }
 
   return (
@@ -82,20 +87,15 @@ function BurgerConstructor() {
       <div className={burgerConstructorStyles.cards_inner_wrapper}>
         <div className={`${burgerConstructorStyles.cards_wrapper} custom-scroll pr-1`}>
           <div className={burgerConstructorStyles.cards_list}>
-            {basket.map((item, index) => {
-              if (item.type === 'bun') {
-                return null;
-              }
-              return (
-                <BurgerConstructorItem
-                  key={item.id}
-                  item={item}
-                  id={item.id}
-                  index={index}
-                  moveCard={moveCard}
-                />
-              );
-            })}
+            {basket.map((item, index) => item.type !== 'bun' && (
+              <BurgerConstructorItem
+                key={item.id}
+                item={item}
+                id={item.id}
+                index={index}
+                moveCard={moveCard}
+              />
+            ))}
           </div>
         </div>
       </div>
@@ -122,7 +122,7 @@ function BurgerConstructor() {
         <Button
           type="primary"
           size="large"
-          onClick={() => handleOpenOrderDetailsModal()}
+          onClick={handleOpenOrderDetailsModal}
           disabled={postOrderRequest}
         >
           Оформить заказ
@@ -130,14 +130,14 @@ function BurgerConstructor() {
       </div>
       {orderNumber
         && (
-          <Modal close={() => handleCloseOrderModal()}>
+          <Modal onClose={handleCloseOrderModal}>
             <OrderDetails orderNumber={orderNumber} />
           </Modal>
         )}
 
       {postOrderFailed
         && (
-          <Modal close={() => dispatch({ type: RESET_ORDER_FAILED })}>
+          <Modal onClose={handleResetOrderFailed}>
             <ErrorModal errorMsg={error} />
           </Modal>
         )}

@@ -19,6 +19,7 @@ import {
 } from '../../pages';
 import AppHeader from '../app-header/app-header';
 import ProtectedRoute from '../protected-route';
+import GuestRoute from '../guest-route';
 import { getUser } from '../../services/actions/get-user-info';
 import IngredientDetails from '../ingredient-details/ingredient-details';
 import Modal from '../modal/modal';
@@ -33,12 +34,12 @@ function ModalSwitch() {
   }));
   const background = location.state && location.state.background;
 
-  const handleModalClose = () => {
+  function handleModalClose() {
     dispatch({
       type: RESET_INGREDIENTS_DETAILS,
     });
     history.goBack();
-  };
+  }
 
   if (!userIsChecked) {
     return null;
@@ -51,18 +52,18 @@ function ModalSwitch() {
         <Route path="/" exact>
           <HomePage />
         </Route>
-        <Route path="/login" exact>
+        <GuestRoute path="/login" exact>
           <LoginPage />
-        </Route>
-        <Route path="/register" exact>
+        </GuestRoute>
+        <GuestRoute path="/register" exact>
           <RegisterPage />
-        </Route>
-        <Route path="/forgot-password" exact>
+        </GuestRoute>
+        <GuestRoute path="/forgot-password" exact>
           <ForgotPasswordPage />
-        </Route>
-        <Route path="/reset-password" exact>
+        </GuestRoute>
+        <GuestRoute path="/reset-password" exact>
           <ResetPasswordPage />
-        </Route>
+        </GuestRoute>
         <ProtectedRoute path="/profile" exact>
           <ProfilePage />
         </ProtectedRoute>
@@ -76,7 +77,7 @@ function ModalSwitch() {
 
       {background && (
         <Route path="/ingredients/:ingredientId">
-          <Modal close={handleModalClose}>
+          <Modal onClose={handleModalClose}>
             <IngredientDetails />
           </Modal>
         </Route>

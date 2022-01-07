@@ -3,16 +3,16 @@ import { Redirect, Route } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 
-export default function ProtectedRoute({ children, route, exact }) {
+export default function GuestRoute({ children, route, exact }) {
   const { user } = useSelector((store) => ({
     user: store.getUserData.user,
   }));
 
   function render({ location }) {
-    return (user ? (children) : (
+    return (!user ? (children) : (
       <Redirect
         to={{
-          pathname: '/login',
+          pathname: '/',
           state: { from: location },
         }}
       />
@@ -28,13 +28,13 @@ export default function ProtectedRoute({ children, route, exact }) {
   );
 }
 
-ProtectedRoute.propTypes = {
+GuestRoute.propTypes = {
   children: PropTypes.element,
   route: PropTypes.string,
   exact: PropTypes.bool,
 };
 
-ProtectedRoute.defaultProps = {
+GuestRoute.defaultProps = {
   children: null,
   route: undefined,
   exact: false,

@@ -62,7 +62,7 @@ export default function ProfilePage() {
         </NavLink>
         <button
           type="button"
-          onClick={() => handleLogout()}
+          onClick={handleLogout}
           className={`${profileStyles.cancel_btn} text text_type_main-medium text_color_inactive pt-6 pb-6 mb-20`}
         >
           Выход
@@ -120,7 +120,7 @@ export default function ProfilePage() {
         <div className={profileStyles.btn_wrapper}>
           <button
             type="button"
-            onClick={() => handleReset()}
+            onClick={handleReset}
             className={`${profileStyles.cancel} text text_type_main-default mr-6`}
           >
             Отмена
@@ -128,7 +128,7 @@ export default function ProfilePage() {
           <Button
             type="primary"
             size="medium"
-            onClick={() => handleSave()}
+            onClick={handleSave}
           >
             Сохранить
           </Button>

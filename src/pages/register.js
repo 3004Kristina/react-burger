@@ -11,14 +11,24 @@ export default function RegisterPage() {
   const [password, setPassword] = React.useState('');
   const [userName, setUserName] = React.useState('');
 
-  const inputRef = React.useRef(null);
-
   function handleRegistration() {
     dispatch(registerUser({
       email,
       password,
       name: userName,
     }));
+  }
+
+  function handleChangeUserName(e) {
+    setUserName(e.target.value);
+  }
+
+  function handleChangeEmail(e) {
+    setEmail(e.target.value);
+  }
+
+  function handleChangePassword(e) {
+    setPassword(e.target.value);
   }
 
   return (
@@ -28,11 +38,10 @@ export default function RegisterPage() {
         <Input
           type="text"
           placeholder="Имя"
-          onChange={(e) => setUserName(e.target.value)}
+          onChange={handleChangeUserName}
           value={userName}
           name="name"
           error={false}
-          ref={inputRef}
           errorText="Ошибка"
           size="default"
         />
@@ -41,11 +50,10 @@ export default function RegisterPage() {
         <Input
           type="email"
           placeholder="E-mail"
-          onChange={(e) => setEmail(e.target.value)}
+          onChange={handleChangeEmail}
           value={email}
           name="name"
           error={false}
-          ref={inputRef}
           errorText="Ошибка"
           size="default"
         />
@@ -54,12 +62,11 @@ export default function RegisterPage() {
         <Input
           type="password"
           placeholder="Пароль"
-          onChange={(e) => setPassword(e.target.value)}
+          onChange={handleChangePassword}
           icon="ShowIcon"
           value={password}
           name="name"
           error={false}
-          ref={inputRef}
           errorText="Ошибка"
           size="default"
         />
@@ -68,14 +75,23 @@ export default function RegisterPage() {
         <Button
           type="primary"
           size="medium"
-          onClick={() => handleRegistration()}
+          onClick={handleRegistration}
         >
           Зарегистрироваться
         </Button>
       </div>
       <div className={`${loginStyles.link_wrapper} mb-4`}>
-        <span className="text text_type_main-default text_color_inactive mr-2">Уже зарегистрированы?</span>
-        <Link className={`text text_type_main-default ${loginStyles.link}`} to="/login">Войти</Link>
+        <span
+          className="text text_type_main-default text_color_inactive mr-2"
+        >
+          Уже зарегистрированы?
+        </span>
+        <Link
+          className={`text text_type_main-default ${loginStyles.link}`}
+          to="/login"
+        >
+          Войти
+        </Link>
       </div>
     </div>
   );

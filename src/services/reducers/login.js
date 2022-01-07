@@ -33,7 +33,6 @@ export default (state = loginInitialState, action = {}) => {
       return {
         ...loginInitialState,
         loginUserFailed: true,
-        loginUserRequest: false,
         error: action.error,
       };
     }

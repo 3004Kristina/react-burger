@@ -35,9 +35,7 @@ export default (state = orderInitialState, action = {}) => {
     case POST_ORDER_FAILED: {
       return {
         ...orderInitialState,
-        orderNumber: null,
         postOrderFailed: true,
-        postOrderRequest: false,
         error: action.error,
       };
     }

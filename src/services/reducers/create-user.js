@@ -31,7 +31,6 @@ export default (state = createUserInitialState, action = {}) => {
       return {
         ...createUserInitialState,
         createUserFailed: true,
-        createUserRequest: false,
         error: action.error,
       };
     }

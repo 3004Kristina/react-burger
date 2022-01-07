@@ -5,16 +5,12 @@ import modalStyles from './modal.module.css';
 import ModalOverlay from './modal-overlay';
 
 export default function Modal(props) {
-  function close() {
-    props.close();
-  }
-
   function handleEscClose(e) {
     if (e.key !== 'Escape') {
       return;
     }
 
-    close();
+    props.onClose();
   }
 
   React.useEffect(() => {
@@ -27,9 +23,9 @@ export default function Modal(props) {
 
   return ReactDOM.createPortal(
     <div>
-      <ModalOverlay onClick={() => close()} />
+      <ModalOverlay onClick={props.onClose} />
       <div className={modalStyles.modal}>
-        <button type="button" className={modalStyles.modal_close} onClick={() => close()} />
+        <button type="button" className={modalStyles.modal_close} onClick={props.onClose} />
 
         <div className={`text text_type_main-large ${modalStyles.modal_title}`}>
           {props.name}

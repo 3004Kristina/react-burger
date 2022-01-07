@@ -13,13 +13,20 @@ export default function ResetPasswordPage() {
     resetPassword: store.resetPasswordData.resetPassword,
     updatePassword: store.updatePasswordData.updatePassword,
   }));
-  const inputRef = React.useRef(null);
 
   function handleRegistration() {
     dispatch(setNewPassword({
       password,
       token: code,
     }));
+  }
+
+  function handleChangeCode(e) {
+    setCode(e.target.value);
+  }
+
+  function handleChangePassword(e) {
+    setPassword(e.target.value);
   }
 
   if (!resetPassword) {
@@ -49,12 +56,11 @@ export default function ResetPasswordPage() {
         <Input
           type="password"
           placeholder="Пароль"
-          onChange={(e) => setPassword(e.target.value)}
+          onChange={handleChangePassword}
           icon="ShowIcon"
           value={password}
           name="name"
           error={false}
-          ref={inputRef}
           errorText="Ошибка"
           size="default"
         />
@@ -63,23 +69,31 @@ export default function ResetPasswordPage() {
         <Input
           type="password"
           placeholder="Введите код из письма"
-          onChange={(e) => setCode(e.target.value)}
+          onChange={handleChangeCode}
           value={code}
           name="name"
           error={false}
-          ref={inputRef}
           errorText="Ошибка"
           size="default"
         />
       </div>
       <div className="mb-20">
-        <Button type="primary" size="medium" onClick={() => handleRegistration()}>
+        <Button type="primary" size="medium" onClick={handleRegistration}>
           Сохранить
         </Button>
       </div>
       <div className={`${loginStyles.link_wrapper} mb-4`}>
-        <span className="text text_type_main-default text_color_inactive mr-2">Вспомнили пароль?</span>
-        <Link className={`text text_type_main-default ${loginStyles.link}`} to="/login">Войти</Link>
+        <span
+          className="text text_type_main-default text_color_inactive mr-2"
+        >
+          Вспомнили пароль?
+        </span>
+        <Link
+          className={`text text_type_main-default ${loginStyles.link}`}
+          to="/login"
+        >
+          Войти
+        </Link>
       </div>
     </div>
   );

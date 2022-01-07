@@ -8,7 +8,6 @@ import loginStyles from './login.module.css';
 export default function ForgotPasswordPage() {
   const dispatch = useDispatch();
   const [email, setEmail] = React.useState('');
-  const inputRef = React.useRef(null);
   const { resetPassword } = useSelector((store) => ({
     resetPassword: store.resetPasswordData.resetPassword,
   }));
@@ -17,6 +16,10 @@ export default function ForgotPasswordPage() {
     dispatch(passwordResetEmailCheck({
       email,
     }));
+  }
+
+  function handleChangeEmail(e) {
+    setEmail(e.target.value);
   }
 
   if (resetPassword) {
@@ -36,17 +39,16 @@ export default function ForgotPasswordPage() {
         <Input
           type="email"
           placeholder="E-mail"
-          onChange={(e) => setEmail(e.target.value)}
+          onChange={handleChangeEmail}
           value={email}
           name="name"
           error={false}
-          ref={inputRef}
           errorText="Ошибка"
           size="default"
         />
       </div>
       <div className="mb-20">
-        <Button type="primary" size="medium" onClick={() => handleRegistration()}>
+        <Button type="primary" size="medium" onClick={handleRegistration}>
           Восстановить
         </Button>
       </div>

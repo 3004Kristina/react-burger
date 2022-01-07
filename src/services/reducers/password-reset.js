@@ -33,7 +33,6 @@ export default (state = resetPasswordInitialState, action = {}) => {
       return {
         ...resetPasswordInitialState,
         resetPasswordFailed: true,
-        resetPasswordRequest: false,
         error: action.error,
       };
     }

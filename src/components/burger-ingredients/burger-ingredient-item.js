@@ -37,7 +37,7 @@ function BurgerIngredientItem({ item }) {
         state: { background: location },
       }}
       >
-        <button type="button" className={burgerIngredientsStyles.card} onClick={() => handleOpenIngredientDetailsModal()}>
+        <button type="button" className={burgerIngredientsStyles.card} onClick={handleOpenIngredientDetailsModal}>
           {count > 0
             && (
               <Counter count={count} size="default" />

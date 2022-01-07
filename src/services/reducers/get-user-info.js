@@ -42,7 +42,6 @@ export default (state = getInitialState, action = {}) => {
       return {
         ...getInitialState,
         getUserFailed: true,
-        getUserRequest: false,
         userIsChecked: true,
         error: action.error,
       };

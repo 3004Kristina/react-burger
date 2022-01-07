@@ -36,9 +36,7 @@ export default (state = ingredientsInitialState, action = {}) => {
     case GET_INGREDIENTS_FAILED: {
       return {
         ...ingredientsInitialState,
-        ingredients: [],
         ingredientsFailed: true,
-        ingredientsRequest: false,
         error: action.error,
       };
     }
@@ -46,7 +44,7 @@ export default (state = ingredientsInitialState, action = {}) => {
       return {
         ...state,
         ingredientsFailed: false,
-        erro: null,
+        error: null,
       };
     }
     default: {
