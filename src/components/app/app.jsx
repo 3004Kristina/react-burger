@@ -18,8 +18,8 @@ import {
   NotFound404,
 } from '../../pages';
 import AppHeader from '../app-header/app-header';
-import ProtectedRoute from '../protected-route';
-import GuestRoute from '../guest-route';
+import ProtectedUnauthorizedRoute from '../protected-unauthorized-route';
+import ProtectedAuthorizedRoute from '../protected-authorized-route';
 import { getUser } from '../../services/actions/get-user-info';
 import IngredientDetails from '../ingredient-details/ingredient-details';
 import Modal from '../modal/modal';
@@ -52,21 +52,21 @@ function ModalSwitch() {
         <Route path="/" exact>
           <HomePage />
         </Route>
-        <GuestRoute path="/login" exact>
+        <ProtectedAuthorizedRoute path="/login" exact>
           <LoginPage />
-        </GuestRoute>
-        <GuestRoute path="/register" exact>
+        </ProtectedAuthorizedRoute>
+        <ProtectedAuthorizedRoute path="/register" exact>
           <RegisterPage />
-        </GuestRoute>
-        <GuestRoute path="/forgot-password" exact>
+        </ProtectedAuthorizedRoute>
+        <ProtectedAuthorizedRoute path="/forgot-password" exact>
           <ForgotPasswordPage />
-        </GuestRoute>
-        <GuestRoute path="/reset-password" exact>
+        </ProtectedAuthorizedRoute>
+        <ProtectedAuthorizedRoute path="/reset-password" exact>
           <ResetPasswordPage />
-        </GuestRoute>
-        <ProtectedRoute path="/profile" exact>
+        </ProtectedAuthorizedRoute>
+        <ProtectedUnauthorizedRoute path="/profile" exact>
           <ProfilePage />
-        </ProtectedRoute>
+        </ProtectedUnauthorizedRoute>
         <Route path="/ingredients/:ingredientId" exact>
           <IngredientsPage />
         </Route>

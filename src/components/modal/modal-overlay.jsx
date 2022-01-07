@@ -7,8 +7,6 @@ export default function ModalOverlay({ onClick }) {
     <button
       type="button"
       onClick={onClick}
-      onKeyDown={() => {
-      }}
       className={modalStyles.modal_overlay}
     />
   );

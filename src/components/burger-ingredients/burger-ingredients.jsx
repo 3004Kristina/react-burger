@@ -10,8 +10,8 @@ function BurgerIngredients() {
     ingredients: store.ingredientsData.ingredients,
   }));
 
-  const memoizedCatalog = useMemo(() => {
-    const catalog = [
+  const catalog = useMemo(() => {
+    const calculatedCatalog = [
       {
         type: 'bun',
         label: 'Булки',
@@ -30,12 +30,12 @@ function BurgerIngredients() {
     ];
 
     ingredients.forEach(
-      (item) => catalog.find(
+      (item) => calculatedCatalog.find(
         (group) => group.type === item.type,
       )?.items.push(item),
     );
 
-    return catalog;
+    return calculatedCatalog;
   }, [ingredients]);
 
   const [current, setCurrent] = React.useState('');
@@ -43,11 +43,11 @@ function BurgerIngredients() {
   const tabWrapperRef = React.useRef(null);
 
   React.useEffect(() => {
-    setCurrent(memoizedCatalog[0].type);
+    setCurrent(catalog[0].type);
   }, []);
 
   function handleScrollWrapper() {
-    memoizedCatalog.forEach((group) => {
+    catalog.forEach((group) => {
       const topCurrent = titleToScrollRef.current[group.type].getBoundingClientRect().top;
       const bottomTabWrapper = tabWrapperRef.current.getBoundingClientRect().bottom;
       const tabWrapper = document.getElementById('tab_wrapper');
@@ -69,7 +69,7 @@ function BurgerIngredients() {
   return (
     <div>
       <div id="tab_wrapper" ref={tabWrapperRef} style={{ display: 'flex' }} className="mb-10 mr-15">
-        {memoizedCatalog.map((group) => group.items.length > 0
+        {catalog.map((group) => group.items.length > 0
           && (
             <Tab
               key={group.type}
@@ -87,7 +87,7 @@ function BurgerIngredients() {
           onScroll={handleScrollWrapper}
           className={`${burgerIngredientsStyles.cards_wrapper} custom-scroll`}
         >
-          {memoizedCatalog.map((group) => group.items.length > 0
+          {catalog.map((group) => group.items.length > 0
             && (
               <div key={group.type} className="mb-10">
                 <h2
