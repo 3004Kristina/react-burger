@@ -1,21 +1,56 @@
 {
+  "env": {
+    "browser": true
+  },
   "extends": [
     "react-app",
     "airbnb",
-    "plugin:jsx-a11y/recommended"
+    "plugin:jsx-a11y/recommended",
+    "eslint:recommended",
+    "plugin:react/recommended"
   ],
   "plugins": [
     "jsx-a11y"
   ],
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "extensions": [
+          ".js",
+          ".jsx",
+          ".ts",
+          ".d.ts",
+          ".tsx"
+        ],
+        "moduleDirectory": [
+          "node_modules",
+          "src/"
+        ]
+      }
+    }
+  },
   "rules": {
     "semi": "off",
     "radix": "off",
+    "import/extensions": [
+      "error",
+      "ignorePackages",
+      {
+        "js": "never",
+        "jsx": "never",
+        "ts": "never",
+        "tsx": "never"
+      }
+    ],
+    "react/function-component-definition": "off",
     "react/jsx-filename-extension": [
       "warn",
       {
         "extensions": [
           ".js",
           ".jsx",
+          ".ts",
+          ".d.ts",
           ".tsx"
         ]
       }
