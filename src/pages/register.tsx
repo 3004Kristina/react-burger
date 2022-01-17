@@ -11,7 +11,8 @@ export default function RegisterPage() {
   const [password, setPassword] = React.useState('');
   const [userName, setUserName] = React.useState('');
 
-  function handleRegistration() {
+  function handleRegistration(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
     dispatch(registerUser({
       email,
       password,
@@ -32,7 +33,7 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className={loginStyles.login_wrapper}>
+    <form className={loginStyles.login_wrapper} onSubmit={handleRegistration}>
       <div className="text text_type_main-medium mb-6">Регистрация</div>
       <div className="mb-6">
         <Input
@@ -73,9 +74,9 @@ export default function RegisterPage() {
       </div>
       <div className="mb-20">
         <Button
+          htmlType="submit"
           type="primary"
           size="medium"
-          onClick={handleRegistration}
         >
           Зарегистрироваться
         </Button>
@@ -93,6 +94,6 @@ export default function RegisterPage() {
           Войти
         </Link>
       </div>
-    </div>
+    </form>
   );
 }

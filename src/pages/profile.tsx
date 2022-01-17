@@ -21,7 +21,8 @@ export default function ProfilePage() {
   const [userName, setUserName] = React.useState(user.name);
   const inputRef = React.useRef(null);
 
-  function handleSave() {
+  function handleSave(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
     dispatch(updateUser({
       name: userName,
       email,
@@ -76,7 +77,7 @@ export default function ProfilePage() {
           изменить свои персональные данные
         </div>
       </div>
-      <div>
+      <form onSubmit={handleSave}>
         <div className="mb-6">
           <Input
             type="text"
@@ -128,17 +129,15 @@ export default function ProfilePage() {
             Отмена
           </button>
           <Button
+            htmlType="submit"
             type="primary"
             size="medium"
-            onClick={handleSave}
           >
             Сохранить
           </Button>
         </div>
-
         <div>{error}</div>
-      </div>
-
+      </form>
     </div>
   );
 }

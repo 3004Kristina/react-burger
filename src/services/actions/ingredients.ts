@@ -1,6 +1,4 @@
 import { getIngredients } from '../../api/apiClient';
-import { ADD_BASKET_INGREDIENT } from './constructor';
-import IIngredientItem from '../../types/IngredientsItem';
 
 export const GET_INGREDIENTS_REQUEST = 'GET_INGREDIENTS_REQUEST';
 export const GET_INGREDIENTS_SUCCESS = 'GET_INGREDIENTS_SUCCESS';
@@ -20,10 +18,6 @@ export function getIngredientsItems() {
         dispatch({
           type: GET_INGREDIENTS_SUCCESS,
           ingredients: res.data,
-        });
-        dispatch({
-          type: ADD_BASKET_INGREDIENT,
-          item: res.data.find((item: IIngredientItem) => item.type === 'bun'),
         });
       })
       .catch((error) => {

@@ -30,8 +30,10 @@
     }
   },
   "rules": {
+    "jsx-a11y/no-noninteractive-element-interactions": "off",
     "semi": "off",
     "radix": "off",
+    "no-bitwise": "off",
     "import/extensions": [
       "error",
       "ignorePackages",

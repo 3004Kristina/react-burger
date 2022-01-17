@@ -7,8 +7,9 @@ export interface IModalOverlayProps {
 
 export default function ModalOverlay({ onClick }: IModalOverlayProps) {
   return (
-    <button
-      type="button"
+    <div
+      role="group"
+      onKeyDown={() => {}}
       onClick={onClick}
       className={modalStyles.modal_overlay}
     />

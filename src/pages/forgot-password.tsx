@@ -13,7 +13,8 @@ export default function ForgotPasswordPage() {
     resetPassword: store.resetPasswordData.resetPassword,
   }));
 
-  function handleRegistration() {
+  function handleRegistration(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
     dispatch(passwordResetEmailCheck({
       email,
     }));
@@ -34,7 +35,7 @@ export default function ForgotPasswordPage() {
   }
 
   return (
-    <div className={loginStyles.login_wrapper}>
+    <form className={loginStyles.login_wrapper} onSubmit={handleRegistration}>
       <div className="text text_type_main-medium mb-6">Восстановление пароля</div>
       <div className="mb-6">
         <Input
@@ -49,7 +50,11 @@ export default function ForgotPasswordPage() {
         />
       </div>
       <div className="mb-20">
-        <Button type="primary" size="medium" onClick={handleRegistration}>
+        <Button
+          htmlType="submit"
+          type="primary"
+          size="medium"
+        >
           Восстановить
         </Button>
       </div>
@@ -57,6 +62,6 @@ export default function ForgotPasswordPage() {
         <span className="text text_type_main-default text_color_inactive mr-2">Вспомнили пароль?</span>
         <Link className={`text text_type_main-default ${loginStyles.link}`} to="/login">Войти</Link>
       </div>
-    </div>
+    </form>
   );
 }

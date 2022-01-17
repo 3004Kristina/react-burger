@@ -1,6 +1,5 @@
 import React from 'react';
-// @ts-ignore
-import uuid from 'react-uuid';
+import { useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { useDrop } from 'react-dnd';
 import {
@@ -8,6 +7,7 @@ import {
   ConstructorElement,
   CurrencyIcon,
 } from '@ya.praktikum/react-developer-burger-ui-components';
+import uuid from '../../utils/uuid';
 import burgerConstructorStyles from './burger-constructor.module.css';
 import OrderDetails from '../order-details/order-details';
 import Modal from '../modal/modal';
@@ -23,6 +23,7 @@ import IIngredientItem from '../../types/IngredientsItem';
 
 function BurgerConstructor() {
   const dispatch = useDispatch();
+  const history = useHistory();
   const {
     basket,
     bun,
@@ -30,6 +31,7 @@ function BurgerConstructor() {
     postOrderFailed,
     postOrderRequest,
     error,
+    user,
   } = useSelector((store) => ({
     // @ts-ignore
     basket: store.constructorData.basket,
@@ -43,7 +45,10 @@ function BurgerConstructor() {
     postOrderRequest: store.orderData.postOrderRequest,
     // @ts-ignore
     error: store.orderData.error,
+    // @ts-ignore
+    user: store.getUserData.user,
   }));
+
   const [, dropTarget] = useDrop({
     accept: 'ingredient-item',
     drop(item: IIngredientItem) {
@@ -64,9 +69,13 @@ function BurgerConstructor() {
   }
 
   function handleOpenOrderDetailsModal() {
-    const orderIdList = basket?.map(({ _id }:IIngredientItem) => _id);
+    const orderIdList = basket?.map(({ _id }: IIngredientItem) => _id);
 
     dispatch(postOrderItems(orderIdList));
+  }
+
+  function handleRedirectToLogin() {
+    history.replace({ pathname: '/login' });
   }
 
   function handleCloseOrderModal() {
@@ -81,6 +90,12 @@ function BurgerConstructor() {
   return (
     <div ref={dropTarget} className={`${burgerConstructorStyles.constructor_wrapper} pl-4`}>
       <div className="pl-8 pr-4">
+        {basket.length === 0
+          && (
+            <div className="text text_type_main-medium mt-6">
+              Пожалуйста, перенесите сюда булку и ингредиенты для создания заказа
+            </div>
+          )}
         {bun
           && (
             <ConstructorElement
@@ -95,7 +110,7 @@ function BurgerConstructor() {
       <div className={burgerConstructorStyles.cards_inner_wrapper}>
         <div className={`${burgerConstructorStyles.cards_wrapper} custom-scroll pr-1`}>
           <div className={burgerConstructorStyles.cards_list}>
-            {basket.map((item: IIngredientItem & {id: string}, index: number) => item.type !== 'bun' && (
+            {basket.map((item: IIngredientItem & { id: string }, index: number) => item.type !== 'bun' && (
               <BurgerConstructorItem
                 key={item.id}
                 item={item}
@@ -130,7 +145,7 @@ function BurgerConstructor() {
         <Button
           type="primary"
           size="large"
-          onClick={handleOpenOrderDetailsModal}
+          onClick={user ? handleOpenOrderDetailsModal : handleRedirectToLogin}
           disabled={postOrderRequest}
         >
           Оформить заказ

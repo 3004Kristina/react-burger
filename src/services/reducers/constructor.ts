@@ -35,8 +35,7 @@ export default (state = constructorInitialState, action: any = {}) => {
       return { ...state, basket }
     }
     case RESET_BASKET: {
-      // @ts-ignore
-      return { ...state, basket: [...state.basket].filter((item) => item.type === 'bun') }
+      return { ...constructorInitialState }
     }
     default: {
       return state;

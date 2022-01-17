@@ -10,7 +10,8 @@ export default function LoginPage() {
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
 
-  function handleLogin() {
+  function handleLogin(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
     dispatch(loginUser({
       email,
       password,
@@ -26,7 +27,7 @@ export default function LoginPage() {
   }
 
   return (
-    <div className={loginStyles.login_wrapper}>
+    <form className={loginStyles.login_wrapper} onSubmit={handleLogin}>
       <div className="text text_type_main-medium mb-6">Вход</div>
       <div className="mb-6">
         <Input
@@ -54,7 +55,11 @@ export default function LoginPage() {
         />
       </div>
       <div className="mb-20">
-        <Button type="primary" size="medium" onClick={handleLogin}>
+        <Button
+          htmlType="submit"
+          type="primary"
+          size="medium"
+        >
           Вход
         </Button>
       </div>
@@ -80,6 +85,6 @@ export default function LoginPage() {
           Восстановить пароль
         </Link>
       </div>
-    </div>
+    </form>
   );
 }

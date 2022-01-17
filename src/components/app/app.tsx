@@ -25,6 +25,7 @@ import { getUser } from '../../services/actions/get-user-info';
 import IngredientDetails from '../ingredient-details/ingredient-details';
 import Modal from '../modal/modal';
 import { RESET_INGREDIENTS_DETAILS } from '../../services/actions/ingredients-detail-modal';
+import { getIngredientsItems } from '../../services/actions/ingredients';
 
 type TLocationState = {
   background: Location;
@@ -39,6 +40,10 @@ function ModalSwitch() {
     userIsChecked: store.getUserData.userIsChecked,
   }));
   const background = location.state && location.state.background;
+
+  React.useEffect(() => {
+    dispatch(getIngredientsItems());
+  }, [dispatch]);
 
   function handleModalClose() {
     dispatch({

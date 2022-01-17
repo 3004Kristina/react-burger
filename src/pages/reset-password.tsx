@@ -16,7 +16,8 @@ export default function ResetPasswordPage() {
     updatePassword: store.updatePasswordData.updatePassword,
   }));
 
-  function handleRegistration() {
+  function handleRegistration(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
     dispatch(setNewPassword({
       password,
       token: code,
@@ -52,7 +53,7 @@ export default function ResetPasswordPage() {
   }
 
   return (
-    <div className={loginStyles.login_wrapper}>
+    <form className={loginStyles.login_wrapper} onSubmit={handleRegistration}>
       <div className="text text_type_main-medium mb-6">Восстановление пароля</div>
       <div className="mb-6">
         <Input
@@ -80,7 +81,11 @@ export default function ResetPasswordPage() {
         />
       </div>
       <div className="mb-20">
-        <Button type="primary" size="medium" onClick={handleRegistration}>
+        <Button
+          htmlType="submit"
+          type="primary"
+          size="medium"
+        >
           Сохранить
         </Button>
       </div>
@@ -97,6 +102,6 @@ export default function ResetPasswordPage() {
           Войти
         </Link>
       </div>
-    </div>
+    </form>
   );
 }

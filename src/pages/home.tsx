@@ -2,7 +2,7 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import MainTitle from '../components/main-title/main-title';
 import BurgerConstructorWrapper from '../components/burger-constructor-wrapper/burger-constructor-wrapper';
-import { getIngredientsItems, RESET_INGREDIENTS_FAILED } from '../services/actions/ingredients';
+import { RESET_INGREDIENTS_FAILED } from '../services/actions/ingredients';
 import Modal from '../components/modal/modal';
 import ErrorModal from '../components/error-modal/error-modal';
 
@@ -13,10 +13,6 @@ export default function HomePage() {
     // @ts-ignore
     ingredientsFailed: store.ingredientsData.ingredientsFailed,
   }));
-
-  React.useEffect(() => {
-    dispatch(getIngredientsItems());
-  }, [dispatch]);
 
   return (
     <div>
