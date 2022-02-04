@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { useLocation, useParams } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import stylesIngredients from './ingredients.module.css';
 import OrderIngredientsDetails
   from '../components/order-ingredients-details/order-ingredients-details';
