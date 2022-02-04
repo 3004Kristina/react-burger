@@ -4,18 +4,20 @@ import {
   BASKET_UPDATE_BY_SORT,
   RESET_BASKET,
 } from '../actions/constructor';
-import IIngredientItem from '../../types/IngredientsItem';
+import { TConstructorInitialState } from '../../types/reducersTypes/constructorReducer';
+import { TConstructorActions } from '../../types/actionTypes/constructorAction';
 
-const constructorInitialState = {
+const constructorInitialState: TConstructorInitialState = {
   basket: [],
 };
 
-export default (state = constructorInitialState, action: any = {}) => {
+export default (state = constructorInitialState, action: TConstructorActions)
+  : TConstructorInitialState => {
   switch (action.type) {
     case ADD_BASKET_INGREDIENT: {
-      let basket: Array<IIngredientItem> = [...state.basket];
+      let basket = [...state.basket];
       if (action.item.type === 'bun') {
-        basket = basket.filter((item: IIngredientItem) => item.type !== 'bun')
+        basket = basket.filter((item) => item.type !== 'bun')
       }
       basket.push(action.item);
 

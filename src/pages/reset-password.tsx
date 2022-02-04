@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button, Input } from '@ya.praktikum/react-developer-burger-ui-components';
 import { Redirect, Link } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector } from '../services/hooks';
 import loginStyles from './login.module.css';
 import { setNewPassword } from '../services/actions/set-new-password';
 
@@ -10,9 +10,7 @@ export default function ResetPasswordPage() {
   const [password, setPassword] = React.useState('');
   const [code, setCode] = React.useState('');
   const { resetPassword, updatePassword } = useSelector((store) => ({
-    // @ts-ignore
     resetPassword: store.resetPasswordData.resetPassword,
-    // @ts-ignore
     updatePassword: store.updatePasswordData.updatePassword,
   }));
 

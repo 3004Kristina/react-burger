@@ -7,8 +7,10 @@ import {
   UPDATE_USER_REQUEST,
   UPDATE_USER_SUCCESS,
 } from '../actions/get-user-info';
+import { TGetInitialState } from '../../types/reducersTypes/getUserInfoReducer';
+import { TGetUserActions } from '../../types/actionTypes/getUserInfoAction';
 
-const getInitialState = {
+const getInitialState: TGetInitialState = {
   getUserFailed: false,
   getUserRequest: false,
   user: null,
@@ -19,7 +21,8 @@ const getInitialState = {
   error: null,
 };
 
-export default (state = getInitialState, action: any = {}) => {
+export default (state = getInitialState, action: TGetUserActions)
+  : TGetInitialState => {
   switch (action.type) {
     case GET_USER_REQUEST: {
       return {

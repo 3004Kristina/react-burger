@@ -1,8 +1,8 @@
 import React from 'react';
 import { Counter, CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
-import { useDispatch, useSelector } from 'react-redux';
 import { useDrag } from 'react-dnd';
 import { Link, useLocation } from 'react-router-dom';
+import { useDispatch, useSelector } from '../../services/hooks';
 import { ACTIVATE_INGREDIENTS_DETAILS } from '../../services/actions/ingredients-detail-modal';
 import burgerIngredientsStyles from './burger-ingredients.module.css';
 import IIngredientItem from '../../types/IngredientsItem';
@@ -16,7 +16,6 @@ function BurgerIngredientItem({ item }: IBurgerIngredientItemProps) {
   const location = useLocation();
   const { _id: itemId } = item;
   const { count } = useSelector((store) => ({
-    // @ts-ignore
     count: store.constructorData.basket.filter(({ _id }) => itemId === _id).length,
   }));
 

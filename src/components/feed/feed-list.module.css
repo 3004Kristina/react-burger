@@ -1,0 +1,96 @@
+.feed_inner_wrapper{
+    width: max-content;
+    height: calc(100vh - 195px);
+    overflow: hidden;
+}
+
+.feed_list_wrapper{
+    display: block;
+    height: 100%;
+    overflow-y: auto;
+}
+
+.feed_item_wrapper{
+    width: 584px;
+    height: 214px;
+    padding: 24px;
+    margin-bottom: 16px;
+    background: #1C1C21;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.04), 0 0 2px rgba(0, 0, 0, 0.06), 0 0 1px rgba(0, 0, 0, 0.04);
+    border-radius: 40px;
+}
+
+.top_wrapper{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+}
+
+.feed_item_info{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.cost{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 10px;
+}
+
+.amount{
+    text-shadow: 0 0 16px rgba(51, 51, 255, 0.25), 0 0 8px rgba(51, 51, 255, 0.25), 0 4px 32px rgba(51, 51, 255, 0.5);
+}
+
+.status_wrapper{
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 36px;
+}
+
+.status_item{
+    min-width: 280px;
+    display: grid;
+    grid-auto-flow: column;
+    grid-template-rows: repeat(8,auto);
+    gap: 10px;
+}
+
+.done{
+    color: #00CCCC;
+}
+
+.img_wrapper{
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: flex-start;
+}
+
+.order_img{
+    display: block;
+    width: 108px;
+    height: 60px;
+    margin-left: -78px;
+    object-fit: fill;
+}
+
+.order_img:last-child{
+    margin-left: -31px;
+}
+
+.name_wrapper{
+    max-height: 62px;
+    height: auto;
+    overflow: hidden;
+}
+
+.name{
+    text-overflow: ellipsis;
+}

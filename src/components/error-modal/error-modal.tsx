@@ -1,7 +1,7 @@
 import React from 'react';
 
 export interface IErrorModalProps {
-  errorMsg?: string;
+  errorMsg?: string | null;
 }
 
 export default function ErrorModal({ errorMsg = 'Что-то пошло не так...' }: IErrorModalProps) {

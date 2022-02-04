@@ -2,13 +2,14 @@ import { login } from '../../api/apiClient';
 import { setCookie } from '../../utils/cookie';
 import { GET_USER_SUCCESS } from './get-user-info';
 import { TApiRequestLogin } from '../../types/api';
+import { AppDispatch } from '../../types';
 
-export const LOGIN_USER_REQUEST = 'LOGIN_USER_REQUEST';
-export const LOGIN_USER_SUCCESS = 'LOGIN_USER_SUCCESS';
-export const LOGIN_USER_FAILED = 'LOGIN_USER_FAILED';
+export const LOGIN_USER_REQUEST: 'LOGIN_USER_REQUEST' = 'LOGIN_USER_REQUEST';
+export const LOGIN_USER_SUCCESS: 'LOGIN_USER_SUCCESS' = 'LOGIN_USER_SUCCESS';
+export const LOGIN_USER_FAILED: 'LOGIN_USER_FAILED' = 'LOGIN_USER_FAILED';
 
 export function loginUser(data: TApiRequestLogin) {
-  return function (dispatch: any) {
+  return function (dispatch: AppDispatch) {
     dispatch({
       type: LOGIN_USER_REQUEST,
     });

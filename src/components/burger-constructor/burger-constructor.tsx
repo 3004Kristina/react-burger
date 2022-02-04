@@ -1,6 +1,5 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
 import { useDrop } from 'react-dnd';
 import {
   Button,
@@ -8,6 +7,7 @@ import {
   CurrencyIcon,
 } from '@ya.praktikum/react-developer-burger-ui-components';
 import uuid from '../../utils/uuid';
+import { useDispatch, useSelector } from '../../services/hooks';
 import burgerConstructorStyles from './burger-constructor.module.css';
 import OrderDetails from '../order-details/order-details';
 import Modal from '../modal/modal';
@@ -33,19 +33,12 @@ function BurgerConstructor() {
     error,
     user,
   } = useSelector((store) => ({
-    // @ts-ignore
     basket: store.constructorData.basket,
-    // @ts-ignore
     bun: store.constructorData.basket.find((item) => item.type === 'bun'),
-    // @ts-ignore
     orderNumber: store.orderData.orderNumber,
-    // @ts-ignore
     postOrderFailed: store.orderData.postOrderFailed,
-    // @ts-ignore
     postOrderRequest: store.orderData.postOrderRequest,
-    // @ts-ignore
     error: store.orderData.error,
-    // @ts-ignore
     user: store.getUserData.user,
   }));
 
@@ -110,7 +103,7 @@ function BurgerConstructor() {
       <div className={burgerConstructorStyles.cards_inner_wrapper}>
         <div className={`${burgerConstructorStyles.cards_wrapper} custom-scroll pr-1`}>
           <div className={burgerConstructorStyles.cards_list}>
-            {basket.map((item: IIngredientItem & { id: string }, index: number) => item.type !== 'bun' && (
+            {basket.map((item, index: number) => item.type !== 'bun' && (
               <BurgerConstructorItem
                 key={item.id}
                 item={item}

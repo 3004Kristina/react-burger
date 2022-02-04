@@ -6,15 +6,18 @@ import {
 
   RESET_ORDER,
 } from '../actions/order';
+import { TOrderInitialState } from '../../types/reducersTypes/orderReducer';
+import { TOrderAction } from '../../types/actionTypes/orderAction';
 
-const orderInitialState = {
+const orderInitialState: TOrderInitialState = {
   orderNumber: null,
   postOrderFailed: false,
   postOrderRequest: false,
   error: null,
 };
 
-export default (state = orderInitialState, action: any = {}) => {
+export default (state = orderInitialState, action: TOrderAction)
+  : TOrderInitialState => {
   switch (action.type) {
     case POST_ORDER_REQUEST: {
       return {

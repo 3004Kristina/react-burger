@@ -4,8 +4,10 @@ import {
   GET_INGREDIENTS_FAILED,
   RESET_INGREDIENTS_FAILED,
 } from '../actions/ingredients';
+import { TIngredientsInitialState } from '../../types/reducersTypes/ingredientReducer';
+import { TIngredientsActions } from '../../types/actionTypes/ingredientsAction';
 
-const ingredientsInitialState = {
+const ingredientsInitialState: TIngredientsInitialState = {
   ingredients: [],
   ingredientsFailed: false,
   ingredientsRequest: false,
@@ -15,7 +17,8 @@ const ingredientsInitialState = {
   error: null,
 };
 
-export default (state = ingredientsInitialState, action: any = {}) => {
+export default (state = ingredientsInitialState, action: TIngredientsActions)
+  : TIngredientsInitialState => {
   switch (action.type) {
     case GET_INGREDIENTS_REQUEST: {
       return {
