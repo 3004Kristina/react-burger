@@ -1,54 +1,49 @@
 import type { Middleware, MiddlewareAPI } from 'redux';
-import { store } from '../store';
+import { TWsAction, TWsActions } from '../../types/wsActionTypes/wsAction';
 
-import { TWsActions } from '../../types/wsActionTypes/wsAction';
-import {
-  WS_CONNECTION_CLOSED,
-  WS_CONNECTION_ERROR,
-  WS_CONNECTION_START,
-  WS_CONNECTION_START_PROFILE,
-  WS_CONNECTION_SUCCESS,
-  WS_GET_MESSAGE,
-} from '../actions/ws-orders';
-import { getCookie } from '../../utils/cookie';
+import { AppDispatch, RootState } from '../../types';
 
-export type AppDispatch = typeof store.dispatch;
-export type RootState = ReturnType<typeof store.getState>;
-
-export const socketMiddleware = (wsUrl: string): Middleware => {
+const socketMiddleware = (wsUrl: string, wsActions: TWsActions): Middleware => {
   return ((middlewareStore: MiddlewareAPI<AppDispatch, RootState>) => {
     let socket: WebSocket | null = null;
 
-    return (next) => (action: TWsActions) => {
+    return (next) => (action: TWsAction) => {
       const { dispatch } = middlewareStore;
       const { type } = action;
-      const accessToken = getCookie('accessToken')?.replace('Bearer ', '');
+      const {
+        wsOpen,
+        wsClose,
+        onOpen,
+        onClose,
+        onError,
+        onMessage,
+      } = wsActions;
 
-      if (type === WS_CONNECTION_START) {
-        socket = new WebSocket(`${wsUrl}/all`);
+      if (type === wsOpen) {
+        socket = new WebSocket(wsUrl);
       }
 
-      if (type === WS_CONNECTION_START_PROFILE) {
-        socket = new WebSocket(`${wsUrl}?token=${accessToken}`);
+      if (type === wsClose) {
+        socket?.close();
       }
 
       if (socket) {
         socket.onopen = () => {
-          dispatch({ type: WS_CONNECTION_SUCCESS });
+          dispatch({ type: onOpen });
         };
 
         socket.onerror = () => {
-          dispatch({ type: WS_CONNECTION_ERROR });
+          dispatch({ type: onError });
         };
 
         socket.onmessage = (event) => {
           const { data } = event;
 
-          dispatch({ type: WS_GET_MESSAGE, payload: JSON.parse(data) });
+          dispatch({ type: onMessage, payload: JSON.parse(data) });
         };
 
         socket.onclose = () => {
-          dispatch({ type: WS_CONNECTION_CLOSED });
+          dispatch({ type: onClose });
         };
       }
 
@@ -56,3 +51,5 @@ export const socketMiddleware = (wsUrl: string): Middleware => {
     };
   }) as Middleware;
 };
+
+export default socketMiddleware;

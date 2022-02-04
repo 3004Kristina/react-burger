@@ -4,26 +4,30 @@ import stylesIngredients from './ingredients.module.css';
 import OrderIngredientsDetails
   from '../components/order-ingredients-details/order-ingredients-details';
 import {
-  WS_CONNECTION_CLOSED,
-  WS_CONNECTION_START,
-  WS_CONNECTION_START_PROFILE,
+  WS_CONNECTION_CLOSE_ALL,
+  WS_CONNECTION_CLOSE_PROFILE,
+  WS_CONNECTION_OPEN_ALL,
+  WS_CONNECTION_OPEN_PROFILE,
 } from '../services/actions/ws-orders';
 import { useDispatch } from '../services/hooks';
 
 export default function OrderIngredientsDetailPage() {
   const dispatch = useDispatch();
   const location = useLocation();
-  const { orderId } = useParams<{ orderId: string }>();
 
   useEffect(() => {
     if (location.pathname.indexOf('feed') !== -1) {
-      dispatch({ type: WS_CONNECTION_START });
+      dispatch({ type: WS_CONNECTION_OPEN_ALL });
     } else {
-      dispatch({ type: WS_CONNECTION_START_PROFILE });
+      dispatch({ type: WS_CONNECTION_OPEN_PROFILE });
     }
 
     return () => {
-      dispatch({ type: WS_CONNECTION_CLOSED })
+      if (location.pathname.indexOf('feed') !== -1) {
+        dispatch({ type: WS_CONNECTION_CLOSE_ALL });
+      } else {
+        dispatch({ type: WS_CONNECTION_CLOSE_PROFILE });
+      }
     }
   }, []);
   return (

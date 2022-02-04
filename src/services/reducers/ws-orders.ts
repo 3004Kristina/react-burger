@@ -5,7 +5,7 @@ import {
   WS_GET_MESSAGE,
 } from '../actions/ws-orders';
 
-import { TWsActions } from '../../types/wsActionTypes/wsAction';
+import { TWsAction } from '../../types/wsActionTypes/wsAction';
 import { TWsInitialState } from '../../types/wsReducersTypes/wsReducer';
 
 const initialState: TWsInitialState = {
@@ -13,7 +13,7 @@ const initialState: TWsInitialState = {
   messages: [],
 };
 
-const wsOrdersReducer = (state = initialState, action: TWsActions)
+const wsOrdersReducer = (state = initialState, action: TWsAction)
   : TWsInitialState => {
   switch (action.type) {
     case WS_CONNECTION_SUCCESS:

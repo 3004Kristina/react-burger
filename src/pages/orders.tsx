@@ -7,8 +7,8 @@ import { LOGOUT_USER } from '../services/actions/get-user-info';
 import { deleteCookie } from '../utils/cookie';
 import FeedList from '../components/feed/feed-list';
 import {
-  WS_CONNECTION_CLOSED,
-  WS_CONNECTION_START_PROFILE,
+  WS_CONNECTION_CLOSE_PROFILE,
+  WS_CONNECTION_OPEN_PROFILE,
 } from '../services/actions/ws-orders';
 
 export default function Orders() {
@@ -16,10 +16,10 @@ export default function Orders() {
   const history = useHistory();
 
   useEffect(() => {
-    dispatch({ type: WS_CONNECTION_START_PROFILE });
+    dispatch({ type: WS_CONNECTION_OPEN_PROFILE });
 
     return () => {
-      dispatch({ type: WS_CONNECTION_CLOSED })
+      dispatch({ type: WS_CONNECTION_CLOSE_PROFILE })
     }
   }, []);
 

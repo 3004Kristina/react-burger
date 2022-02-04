@@ -4,16 +4,19 @@ import FeedList from '../components/feed/feed-list';
 import feedStyles from './feed.module.css';
 import FeedInfo from '../components/feed/feed-info';
 import { useDispatch } from '../services/hooks';
-import { WS_CONNECTION_CLOSED, WS_CONNECTION_START } from '../services/actions/ws-orders';
+import {
+  WS_CONNECTION_CLOSE_ALL,
+  WS_CONNECTION_OPEN_ALL,
+} from '../services/actions/ws-orders';
 
 export default function Feed() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch({ type: WS_CONNECTION_START });
+    dispatch({ type: WS_CONNECTION_OPEN_ALL });
 
     return () => {
-      dispatch({ type: WS_CONNECTION_CLOSED })
+      dispatch({ type: WS_CONNECTION_CLOSE_ALL })
     }
   }, []);
 
