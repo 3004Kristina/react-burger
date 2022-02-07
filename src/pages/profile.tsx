@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button, Input } from '@ya.praktikum/react-developer-burger-ui-components';
 import { NavLink, useHistory } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector } from '../services/hooks';
 import profileStyles from './profile.module.css';
 import { logout } from '../api/apiClient';
 import { LOGOUT_USER, updateUser } from '../services/actions/get-user-info';
@@ -11,14 +11,12 @@ export default function ProfilePage() {
   const dispatch = useDispatch();
   const history = useHistory();
   const { user, error } = useSelector((store) => ({
-    // @ts-ignore
     user: store.getUserData.user,
-    // @ts-ignore
     error: store.getUserData.error,
   }));
   const [password, setPassword] = React.useState('');
-  const [email, setEmail] = React.useState(user.email);
-  const [userName, setUserName] = React.useState(user.name);
+  const [email, setEmail] = React.useState(user?.email || '');
+  const [userName, setUserName] = React.useState(user?.name || '');
   const inputRef = React.useRef(null);
 
   function handleSave(e: React.FormEvent<HTMLFormElement>) {
@@ -30,8 +28,8 @@ export default function ProfilePage() {
   }
 
   function handleReset() {
-    setEmail(user.email);
-    setUserName(user.name);
+    setEmail(user?.email || '');
+    setUserName(user?.name || '');
     setPassword('');
   }
 
@@ -59,6 +57,7 @@ export default function ProfilePage() {
         </NavLink>
         <NavLink
           to="/profile/orders"
+          activeClassName={profileStyles.activeLink}
           className="text text_type_main-medium text_color_inactive pt-6 pb-6"
         >
           История заказов

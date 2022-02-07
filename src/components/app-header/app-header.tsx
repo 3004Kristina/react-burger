@@ -27,7 +27,8 @@ export default function AppHeader() {
               </li>
               <li>
                 <NavLink
-                  to="/orders-list"
+                  to="/feed"
+                  activeClassName={appHeaderStyles.active}
                   className="text text_type_main-default text_color_inactive"
                 >
                   <ListIcon type="secondary" />

@@ -7,7 +7,7 @@ import {
   useLocation,
 } from 'react-router-dom';
 import { Location } from 'history';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector } from '../../services/hooks';
 import {
   HomePage,
   LoginPage,
@@ -16,6 +16,9 @@ import {
   ResetPasswordPage,
   ProfilePage,
   IngredientsPage,
+  OrderIngredientsDetailPage,
+  Orders,
+  Feed,
   NotFound404,
 } from '../../pages/index';
 import AppHeader from '../app-header/app-header';
@@ -26,6 +29,10 @@ import IngredientDetails from '../ingredient-details/ingredient-details';
 import Modal from '../modal/modal';
 import { RESET_INGREDIENTS_DETAILS } from '../../services/actions/ingredients-detail-modal';
 import { getIngredientsItems } from '../../services/actions/ingredients';
+import OrderIngredientsDetails from '../order-ingredients-details/order-ingredients-details';
+import {
+  RESET_ORDER_INGREDIENTS_DETAILS,
+} from '../../services/actions/order-ingredients-detail-modal';
 
 type TLocationState = {
   background: Location;
@@ -36,7 +43,6 @@ function ModalSwitch() {
   const location = useLocation<TLocationState>();
   const history = useHistory();
   const { userIsChecked } = useSelector((store) => ({
-    // @ts-ignore
     userIsChecked: store.getUserData.userIsChecked,
   }));
   const background = location.state && location.state.background;
@@ -45,9 +51,16 @@ function ModalSwitch() {
     dispatch(getIngredientsItems());
   }, [dispatch]);
 
-  function handleModalClose() {
+  function handleIngredientsDetailModalClose() {
     dispatch({
       type: RESET_INGREDIENTS_DETAILS,
+    });
+    history.goBack();
+  }
+
+  function handleOrderIngredientsDetailModalClose() {
+    dispatch({
+      type: RESET_ORDER_INGREDIENTS_DETAILS,
     });
     history.goBack();
   }
@@ -62,6 +75,9 @@ function ModalSwitch() {
       <Switch location={background || location}>
         <Route path="/" exact>
           <HomePage />
+        </Route>
+        <Route path="/feed" exact>
+          <Feed />
         </Route>
         <ProtectedAuthorizedRoute path="/login" exact>
           <LoginPage />
@@ -78,8 +94,17 @@ function ModalSwitch() {
         <ProtectedUnauthorizedRoute path="/profile" exact>
           <ProfilePage />
         </ProtectedUnauthorizedRoute>
+        <ProtectedUnauthorizedRoute path="/profile/orders" exact>
+          <Orders />
+        </ProtectedUnauthorizedRoute>
         <Route path="/ingredients/:ingredientId" exact>
           <IngredientsPage />
+        </Route>
+        <Route path="/feed/:orderId" exact>
+          <OrderIngredientsDetailPage />
+        </Route>
+        <Route path="/profile/orders/:orderId" exact>
+          <OrderIngredientsDetailPage />
         </Route>
         <Route>
           <NotFound404 />
@@ -87,11 +112,23 @@ function ModalSwitch() {
       </Switch>
 
       {background && (
-        <Route path="/ingredients/:ingredientId">
-          <Modal onClose={handleModalClose}>
-            <IngredientDetails />
-          </Modal>
-        </Route>
+        <>
+          <Route path="/ingredients/:ingredientId">
+            <Modal onClose={handleIngredientsDetailModalClose}>
+              <IngredientDetails />
+            </Modal>
+          </Route>
+          <Route path="/profile/orders/:orderId">
+            <Modal onClose={handleOrderIngredientsDetailModalClose}>
+              <OrderIngredientsDetails />
+            </Modal>
+          </Route>
+          <Route path="/feed/:orderId">
+            <Modal onClose={handleOrderIngredientsDetailModalClose}>
+              <OrderIngredientsDetails />
+            </Modal>
+          </Route>
+        </>
       )}
     </>
   );

@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
-import { useSelector } from 'react-redux';
 import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
+import { useSelector } from '../../services/hooks';
 import burgerIngredientsStyles from './burger-ingredients.module.css';
 import { INGREDIENT_GROUPS } from '../../utils/consts';
 import BurgerIngredientItem from './burger-ingredient-item';
@@ -14,8 +14,7 @@ function getIngredientGroupLabel(type: string): string | null {
 }
 
 function BurgerIngredients() {
-  const { ingredients }: any = useSelector((store) => ({
-    // @ts-ignore
+  const { ingredients } = useSelector((store) => ({
     ingredients: store.ingredientsData.ingredients,
   }));
 

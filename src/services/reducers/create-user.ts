@@ -3,14 +3,17 @@ import {
   CREATE_USER_SUCCESS,
   CREATE_USER_FAILED,
 } from '../actions/create-user';
+import { TCreateUserInitialState } from '../../types/reducersTypes/createUserReducer';
+import { TCreateUserActions } from '../../types/actionTypes/createUserAction';
 
-const createUserInitialState = {
+const createUserInitialState: TCreateUserInitialState = {
   createUserFailed: false,
   createUserRequest: false,
   error: null,
 };
 
-export default (state = createUserInitialState, action: any = {}) => {
+export default (state = createUserInitialState, action: TCreateUserActions)
+  : TCreateUserInitialState => {
   switch (action.type) {
     case CREATE_USER_REQUEST: {
       return {
