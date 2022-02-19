@@ -12,28 +12,31 @@ export function registerUser(data: TApiRequestRegisterNewUser) {
     dispatch({
       type: CREATE_USER_REQUEST,
     });
-    registerNewUser(data)
-      .then((res) => {
-        if (!res?.success) {
-          return Promise.reject();
-        }
-        dispatch({
-          type: CREATE_USER_SUCCESS,
+
+    return new Promise((resolve, reject) => {
+      registerNewUser(data)
+        .then((res) => {
+          if (!res?.success) {
+            reject();
+            return;
+          }
+          dispatch({
+            type: CREATE_USER_SUCCESS,
+          });
+
+          setCookie('refreshToken', res.refreshToken);
+          setCookie('accessToken', res.accessToken);
+
+          resolve(true);
+        })
+        .catch((error) => {
+          dispatch({
+            type: CREATE_USER_FAILED,
+            error: error.message,
+          });
+
+          reject(error.message);
         });
-
-        setCookie('refreshToken', res.refreshToken);
-        setCookie('accessToken', res.accessToken);
-
-        return Promise.resolve();
-      })
-      .catch((error) => {
-        // eslint-disable-next-line no-console
-        console.error(error);
-
-        dispatch({
-          type: CREATE_USER_FAILED,
-          error: error.message,
-        });
-      });
+    });
   };
 }

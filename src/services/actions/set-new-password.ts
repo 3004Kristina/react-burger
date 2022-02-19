@@ -8,26 +8,31 @@ export const SET_NEW_PASSWORD_FAILED: 'SET_NEW_PASSWORD' = 'SET_NEW_PASSWORD';
 
 export function setNewPassword(data: TApiRequestUpdatePassword) {
   return function (dispatch: AppDispatch) {
-    dispatch({
-      type: SET_NEW_PASSWORD_REQUEST,
-    });
-    updatePassword(data)
-      .then((res) => {
-        if (!res?.success) {
-          throw res.message;
-        }
-        dispatch({
-          type: SET_NEW_PASSWORD_SUCCESS,
-        });
-      })
-      .catch((error) => {
-        // eslint-disable-next-line no-console
-        console.error(error);
-
-        dispatch({
-          type: SET_NEW_PASSWORD_FAILED,
-          error: error.message,
-        });
+    return new Promise((resolve, reject) => {
+      dispatch({
+        type: SET_NEW_PASSWORD_REQUEST,
       });
+
+      updatePassword(data)
+        .then((res) => {
+          if (!res?.success) {
+            reject(res.message);
+            return;
+          }
+          dispatch({
+            type: SET_NEW_PASSWORD_SUCCESS,
+          });
+
+          resolve(true);
+        })
+        .catch((error) => {
+          dispatch({
+            type: SET_NEW_PASSWORD_FAILED,
+            error: error.message,
+          });
+
+          reject(error.message);
+        });
+    });
   };
 }
