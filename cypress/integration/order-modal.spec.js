@@ -17,5 +17,7 @@ describe('ingredient detail modal', function () {
     cy.wait(17000);
     cy.get('[class^=modal_modal__]').first().as('modal');
     cy.get('@modal').contains('Ваш заказ начали готовить');
+    cy.get('[class^=modal_modal_close__]').first().click();
+    cy.get('[class^=modal_modal__]').should('not.exist');
   });
 });

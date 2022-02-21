@@ -10,5 +10,6 @@ describe('drag and drop', function() {
     cy.get('[class^=burger-constructor_constructor_wrapper__]').first().trigger('drop', {
       dataTransfer
     });
+    cy.get('.constructor-element').should('exist');
   });
 });
