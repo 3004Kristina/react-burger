@@ -1,5 +1,6 @@
 describe('ingredient detail modal', function() {
   before(function() {
+    cy.login(Cypress.env('TEST_USER_LOGIN'), Cypress.env('TEST_USER_PASSWORD'));
     cy.visit(Cypress.env('TEST_BASE_URL'));
   });
   it('should ingredient detail modal open', function() {
