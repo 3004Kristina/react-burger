@@ -19,53 +19,72 @@ export function getUser() {
       type: GET_USER_REQUEST,
     });
 
-    getUserData()
-      .then((getUserDataResponse) => {
-        if (!getUserDataResponse?.success) {
-          throw getUserDataResponse.message;
-        }
+    return new Promise((resolve) => {
+      getUserData()
+        .then((getUserDataResponse) => {
+          if (!getUserDataResponse?.success) {
+            resolve(false);
 
-        dispatch({
-          type: GET_USER_SUCCESS,
-          user: getUserDataResponse.user,
-        });
-      })
-      .catch((res) => {
-        if (res?.message === 'jwt expired') {
+            return;
+          }
+
+          dispatch({
+            type: GET_USER_SUCCESS,
+            user: getUserDataResponse.user,
+          });
+
+          resolve(true);
+        })
+        .catch((res) => {
+          if (res?.message !== 'jwt expired') {
+            dispatch({
+              type: GET_USER_FAILED,
+              error: res?.message,
+            });
+
+            resolve(false);
+
+            return;
+          }
+
           refreshToken()
             .then((refreshTokenResponse) => {
               if (!refreshTokenResponse?.success) {
-                return Promise.reject();
+                resolve(false);
+                return;
               }
+
               setCookie('refreshToken', refreshTokenResponse.refreshToken);
               setCookie('accessToken', refreshTokenResponse.accessToken);
 
-              return getUserData()
-                .then(() => {
+              getUserData()
+                .then((getUserDataResponse) => {
                   dispatch({
                     type: GET_USER_SUCCESS,
-                    user: refreshTokenResponse.user,
+                    user: getUserDataResponse.user,
                   });
+
+                  resolve(true);
+                })
+                .catch((error) => {
+                  dispatch({
+                    type: GET_USER_FAILED,
+                    error: error.message,
+                  });
+
+                  resolve(false);
                 });
             })
             .catch((error) => {
-              // eslint-disable-next-line no-console
-              console.error(error);
-
               dispatch({
                 type: GET_USER_FAILED,
                 error: error.message,
               });
+
+              resolve(false);
             });
-
-          return;
-        }
-
-        dispatch({
-          type: GET_USER_FAILED,
-          error: res?.message,
         });
-      });
+    });
   };
 }
 
@@ -74,26 +93,29 @@ export function updateUser(data: TApiRequestUpdateUserData) {
     dispatch({
       type: UPDATE_USER_REQUEST,
     });
-    updateUserData(data)
-      .then((res) => {
-        if (!res?.success) {
-          return Promise.reject();
-        }
-        dispatch({
-          type: UPDATE_USER_SUCCESS,
-          user: res.user,
-        });
 
-        return Promise.resolve();
-      })
-      .catch((error) => {
-        // eslint-disable-next-line no-console
-        console.error(error);
+    return new Promise((resolve, reject) => {
+      updateUserData(data)
+        .then((res) => {
+          if (!res?.success) {
+            reject();
+            return;
+          }
+          dispatch({
+            type: UPDATE_USER_SUCCESS,
+            user: res.user,
+          });
 
-        dispatch({
-          type: UPDATE_USER_FAILED,
-          error: error.message,
+          resolve(true);
+        })
+        .catch((error) => {
+          dispatch({
+            type: UPDATE_USER_FAILED,
+            error: error.message,
+          });
+
+          reject(error.message);
         });
-      });
+    });
   };
 }

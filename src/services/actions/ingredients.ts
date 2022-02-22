@@ -11,24 +11,28 @@ export function getIngredientsItems() {
     dispatch({
       type: GET_INGREDIENTS_REQUEST,
     });
-    getIngredients()
-      .then((res) => {
-        if (!res?.success) {
-          throw res.message;
-        }
-        dispatch({
-          type: GET_INGREDIENTS_SUCCESS,
-          ingredients: res.data,
-        });
-      })
-      .catch((error) => {
-        // eslint-disable-next-line no-console
-        console.error(error);
+    return new Promise((resolve, reject) => {
+      getIngredients()
+        .then((res) => {
+          if (!res?.success) {
+            reject(res.message);
+            return;
+          }
+          dispatch({
+            type: GET_INGREDIENTS_SUCCESS,
+            ingredients: res.data,
+          });
 
-        dispatch({
-          type: GET_INGREDIENTS_FAILED,
-          error: error.message,
+          resolve(true);
+        })
+        .catch((error) => {
+          dispatch({
+            type: GET_INGREDIENTS_FAILED,
+            error: error.message,
+          });
+
+          reject(error.message);
         });
-      });
+    });
   };
 }

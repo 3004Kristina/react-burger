@@ -1,0 +1,8 @@
+{
+  "env": {
+    "BACKEND_BASE_URL": "https://norma.nomoreparties.space/api",
+    "TEST_BASE_URL": "http://localhost:3000",
+    "TEST_USER_LOGIN": "kristina.usova@gmail.com",
+    "TEST_USER_PASSWORD": "111111"
+  }
+}

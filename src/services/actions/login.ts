@@ -13,30 +13,35 @@ export function loginUser(data: TApiRequestLogin) {
     dispatch({
       type: LOGIN_USER_REQUEST,
     });
-    login(data)
-      .then((res) => {
-        if (!res?.success) {
-          throw res.message;
-        }
-        dispatch({
-          type: LOGIN_USER_SUCCESS,
-        });
-        dispatch({
-          type: GET_USER_SUCCESS,
-          user: res.user,
-        });
 
-        setCookie('refreshToken', res.refreshToken);
-        setCookie('accessToken', res.accessToken);
-      })
-      .catch((error) => {
-        // eslint-disable-next-line no-console
-        console.error(error);
+    return new Promise((resolve, reject) => {
+      login(data)
+        .then((res) => {
+          if (!res?.success) {
+            reject(res.message);
+            return;
+          }
+          dispatch({
+            type: LOGIN_USER_SUCCESS,
+          });
+          dispatch({
+            type: GET_USER_SUCCESS,
+            user: res.user,
+          });
 
-        dispatch({
-          type: LOGIN_USER_FAILED,
-          error: error.message,
+          setCookie('refreshToken', res.refreshToken);
+          setCookie('accessToken', res.accessToken);
+
+          resolve(true);
+        })
+        .catch((error) => {
+          dispatch({
+            type: LOGIN_USER_FAILED,
+            error: error.message,
+          });
+
+          reject(error.message);
         });
-      });
+    });
   };
 }

@@ -11,23 +11,28 @@ export function passwordResetEmailCheck(data: TApiRequestPasswordReset) {
     dispatch({
       type: PASSWORD_RESET_REQUEST,
     });
-    passwordReset(data)
-      .then((res) => {
-        if (!res?.success) {
-          throw res.message;
-        }
-        dispatch({
-          type: PASSWORD_RESET_SUCCESS,
-        });
-      })
-      .catch((error) => {
-        // eslint-disable-next-line no-console
-        console.error(error);
 
-        dispatch({
-          type: PASSWORD_RESET_FAILED,
-          error: error.message,
+    return new Promise((resolve, reject) => {
+      passwordReset(data)
+        .then((res) => {
+          if (!res?.success) {
+            reject(res.message);
+            return;
+          }
+          dispatch({
+            type: PASSWORD_RESET_SUCCESS,
+          });
+
+          resolve(true);
+        })
+        .catch((error) => {
+          dispatch({
+            type: PASSWORD_RESET_FAILED,
+            error: error.message,
+          });
+
+          reject(error.message);
         });
-      });
+    });
   };
 }

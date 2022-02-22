@@ -13,24 +13,29 @@ export function postOrderItems(orderIdList: Array<string>) {
     dispatch({
       type: POST_ORDER_REQUEST,
     });
-    postOrder(orderIdList)
-      .then((res) => {
-        if (!res?.success) {
-          throw res.message;
-        }
-        dispatch({
-          type: POST_ORDER_SUCCESS,
-          orderNumber: res.order.number,
-        });
-      })
-      .catch((error) => {
-        // eslint-disable-next-line no-console
-        console.error(error);
 
-        dispatch({
-          type: POST_ORDER_FAILED,
-          error: error.message,
+    return new Promise((resolve, reject) => {
+      postOrder(orderIdList)
+        .then((res) => {
+          if (!res?.success) {
+            reject(res.message);
+            return;
+          }
+          dispatch({
+            type: POST_ORDER_SUCCESS,
+            orderNumber: res.order.number,
+          });
+
+          resolve(true);
+        })
+        .catch((error) => {
+          dispatch({
+            type: POST_ORDER_FAILED,
+            error: error.message,
+          });
+
+          reject(error.message);
         });
-      });
+    });
   };
 }
